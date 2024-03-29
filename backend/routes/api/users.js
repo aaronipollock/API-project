@@ -16,6 +16,14 @@ const { handleValidationErrors } = require('../../utils/validation');
 // backend/routes/api/users.js
 // ...
 const validateSignup = [
+  // check('firstName')
+  //   .exists({ checkFalsy: true })
+  //   .isString()
+  //   .withMessage('Please provide a first name.'),
+  // check('lastName')
+  //   .exists({ checkFalsy: true })
+  //   .isString()
+  //   .withMessage('Please provide a last name'),
   check('email')
     .exists({ checkFalsy: true })
     .isEmail()
@@ -43,12 +51,14 @@ router.post(
     '/',
     validateSignup,
     async (req, res) => {
-      const { email, password, username } = req.body;
+      const { email, password, username, firstName, lastName } = req.body;
       const hashedPassword = bcrypt.hashSync(password);
-      const user = await User.create({ email, username, hashedPassword });
+      const user = await User.create({ firstName, lastName, email, username, hashedPassword });
 
       const safeUser = {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
       };
