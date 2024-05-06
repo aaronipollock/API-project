@@ -9,8 +9,15 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await User.bulkCreate([
+      {
+        firstName: 'John',
+        lastName: 'Smith',
+        email: 'john.smith@gmail.com',
+        username: 'JohnSmith',
+        hashedPassword: bcrypt.hashSync('secret password')
+      },
       {
         firstName: 'Demo',
         lastName: 'Lition',
@@ -35,11 +42,11 @@ module.exports = {
     ], { validate: true });
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     options.tableName = 'Users';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      username: { [Op.in]: ['Demo-lition', 'FakeUser1', 'FakeUser2'] }
+      username: { [Op.in]: ['JohnSmith', 'Demo-lition', 'FakeUser1', 'FakeUser2'] }
     }, {});
   }
 };
