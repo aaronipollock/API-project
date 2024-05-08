@@ -9,14 +9,14 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../../config/database.js')[env];
 const db = {};
 
-const Attendance = require('../attendance');
-const Event = require('../event');
-const EventImage = require('../eventimage');
-const Group = require('../group');
-const GroupImage = require('../groupimage');
-const Membership = require('../membership');
-const User = require('../user');
-const Venue = require('../venue');
+const Attendance = require('../models/attendance');
+const Event = require('../models/event');
+const EventImage = require('../models/eventimage');
+const Group = require('../models/group');
+const GroupImage = require('../models/groupimage');
+const Membership = require('../models/membership');
+const User = require('../models/user');
+const Venue = require('../models/venue');
 
 let sequelize;
 if (config.use_env_variable) {
