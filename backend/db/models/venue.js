@@ -57,4 +57,4 @@ module.exports = (sequelize, DataTypes) => {
 };
 
 
-module.exports = Venue;
+module.exports = venue.js;

@@ -69,4 +69,4 @@ module.exports = (sequelize, DataTypes) => {
 };
 
 
-module.exports = Group;
+module.exports = group.js;

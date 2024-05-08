@@ -81,4 +81,4 @@ module.exports = (sequelize, DataTypes) => {
 };
 
 
-module.exports = User;
+module.exports = user.js;

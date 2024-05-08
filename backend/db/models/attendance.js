@@ -34,4 +34,4 @@ module.exports = (sequelize, DataTypes) => {
 };
 
 
-module.exports = Attendance;
+module.exports = attendance.js;
