@@ -27,3 +27,6 @@ module.exports = (sequelize, DataTypes) => {
   });
   return EventImage;
 };
+
+
+module.exports = EventImage;

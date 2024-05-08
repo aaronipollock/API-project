@@ -23,3 +23,6 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Membership;
 };
+
+
+module.exports = Membership;

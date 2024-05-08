@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
     /**
@@ -79,3 +80,6 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Event;
 };
+
+
+module.exports = Event;

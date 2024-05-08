@@ -67,3 +67,6 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Group;
 };
+
+
+module.exports = Group;

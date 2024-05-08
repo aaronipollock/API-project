@@ -32,3 +32,6 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Attendance;
 };
+
+
+module.exports = Attendance;
