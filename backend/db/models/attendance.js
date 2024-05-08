@@ -33,5 +33,3 @@ module.exports = (sequelize, DataTypes) => {
   return Attendance;
 };
 
-
-module.exports = attendance.js;

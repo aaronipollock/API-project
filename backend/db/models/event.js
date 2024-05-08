@@ -81,5 +81,3 @@ module.exports = (sequelize, DataTypes) => {
   return Event;
 };
 
-
-module.exports = event.js;

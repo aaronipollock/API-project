@@ -27,6 +27,3 @@ module.exports = (sequelize, DataTypes) => {
   });
   return GroupImage;
 };
-
-
-module.exports = groupimage.js;
