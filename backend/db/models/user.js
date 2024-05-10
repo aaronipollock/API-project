@@ -12,11 +12,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.hasMany(
         models.Attendance,
-        { foreignKeys: 'userId' }
+        { foreignKey: 'userId' }
         )
       User.hasMany(
         models.Group,
-        { foreignKeys: 'organizerId' }
+        { foreignKey: 'organizerId' }
       )
       User.belongsToMany(
         models.Group, {
@@ -79,4 +79,3 @@ module.exports = (sequelize, DataTypes) => {
     });
   return User;
 };
-
