@@ -13,19 +13,18 @@ module.exports = {
     await Event.bulkCreate([
       {
         groupId: 1,
-        venueId: null,
         name: 'Tennis Group First Meet and Greet',
         type: 'Online',
-        startDate: '2021-11-19 20:00:00',
-        endDate: '2021-11-19 22:00:00'
+        startDate: '2024-11-19 20:00:00',
+        endDate: '2024-11-19 22:00:00'
       },
       {
-        groupId: 1,
+        groupId: 2,
         venueId: 1,
         name: 'Tennis Singles',
         type: 'In person',
-        startDate: '2021-11-20 20:00:00',
-        endDate: '2021-11-20 22:00:00'
+        startDate: '2024-11-20 20:00:00',
+        endDate: '2024-11-20 22:00:00'
       }
     ], { validate: true} )
   },
@@ -34,7 +33,9 @@ module.exports = {
     options.tableName = 'Events';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      name: { [Op.in]: ['Tennis Group First meet and Greet', 'Tennis Singles'] }
+      name: { [Op.in]: [
+        'Tennis Group First Meet and Greet',
+        'Tennis Singles'] }
     }, {});
   }
 };

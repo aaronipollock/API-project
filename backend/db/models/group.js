@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model
+  Model, Validator
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
@@ -67,4 +67,3 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Group;
 };
-

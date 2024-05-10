@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model
+  Model, Validator
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Attendance extends Model {
@@ -32,4 +32,3 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Attendance;
 };
-

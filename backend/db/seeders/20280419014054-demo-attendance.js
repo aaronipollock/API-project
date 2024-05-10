@@ -17,7 +17,7 @@ module.exports = {
         status: 'attending',
       },
       {
-        eventId: 2,
+        eventId: 1,
         userId: 2,
         status: 'waitlist',
       }
@@ -28,7 +28,7 @@ module.exports = {
     options.tableName = 'Attendances';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      username: { [Op.in]: ['JohnSmith', 'Demo-lition', 'FakeUser1', 'FakeUser2'] }
+      eventId: { [Op.in]: [1, 2] }
     }, {});
   }
 };

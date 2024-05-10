@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model
+  Model, Validator
 } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
@@ -31,8 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Event.init({
-    venueId: DataTypes.INTEGER,
     groupId: DataTypes.INTEGER,
+    venueId: DataTypes.INTEGER,
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -44,7 +44,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: false,
     },
     type: DataTypes.ENUM('Online', 'In person'),
     capacity: DataTypes.INTEGER,
@@ -80,4 +79,3 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Event;
 };
-

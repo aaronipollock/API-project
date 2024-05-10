@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model, ForeignKeyConstraintError
+  Model, Validator
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class EventImage extends Model {
@@ -27,4 +27,3 @@ module.exports = (sequelize, DataTypes) => {
   });
   return EventImage;
 };
-
