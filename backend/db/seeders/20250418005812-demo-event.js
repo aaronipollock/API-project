@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await Event.bulkCreate([
+    await Event.bulkCreate(options, [
       {
         groupId: 1,
         name: 'Tennis Group First Meet and Greet',

@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await Group.bulkCreate([
+    await Group.bulkCreate(options, [
       {
         organizerId: 1,
         name: 'Evening Tennis on the Water',
