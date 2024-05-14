@@ -17,6 +17,18 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    await GroupImage.bulkCreate([
+      {
+        groupId: 1,
+        url: 'eventImageUrl1',
+        preview: false,
+      },
+      {
+        groupId: 2,
+        url: 'groupImageUrl2',
+        preview: true,
+      }
+    ], Object.assign({ validate: true }, options))
   },
 
   async down (queryInterface, Sequelize) {

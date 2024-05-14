@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await Venue.bulkCreate(options, [
+    await Venue.bulkCreate([
       {
         groupId: 1,
         address: '123 Disney Lane',
@@ -19,14 +19,14 @@ module.exports = {
         lat: 37.7645358,
         lng: -122.4730327,
       }
-    ], { validate: true });
+    ], Object.assign({ validate: true }, options));
   },
 
   async down (queryInterface, Sequelize) {
     options.tableName = 'Venues';
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
+    return queryInterface.bulkDelete({
       address: { [Op.in]: ['123 Disney Lane'] }
-    }, {});
+    }, options);
   }
 };

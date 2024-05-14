@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await Membership.bulkCreate(options, [
+    await Membership.bulkCreate([
       {
         userId: 1,
         groupId: 1,
@@ -27,15 +27,15 @@ module.exports = {
         groupId: 3,
         status: 'pending'
       },
-    ], { validate: true });
+    ], Object.assign({ validate: true }, options));
   },
 
 
   async down(queryInterface, Sequelize) {
     options.tableName = 'memberships';
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
+    return queryInterface.bulkDelete({
       userId: { [Op.in]: [1, 2, 3] }
-    }, {});
+    }, options);
   }
 };
