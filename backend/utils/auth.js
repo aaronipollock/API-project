@@ -5,10 +5,9 @@ const { User } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
-// backend/utils/auth.js
-// ...
 
 // Sends a JWT Cookie
+// This function will be used in the login and signup routes later.
 const setTokenCookie = (res, user) => {
     // Create the token.
     const safeUser = {
@@ -35,8 +34,7 @@ const setTokenCookie = (res, user) => {
     return token;
 };
 
-// backend/utils/auth.js
-// ...
+
 
 const restoreUser = (req, res, next) => {
     // token parsed from cookies
@@ -66,21 +64,21 @@ const restoreUser = (req, res, next) => {
     });
 };
 
-// backend/utils/auth.js
-// ...
 
+// The last authentication middleware to add is for requiring a session user to be authenticated before accessing a route.
 // If there is no current user, return an error
-const requireAuth = function (req, _res, next) {
-    if (req.user) return next();
+const requireAuth = [
+    restoreUser, // Firstmiddlewar in the array
+    function (req, _res, next) {
+        if (req.user) return next();
 
-    const err = new Error('Authentication required');
-    err.title = 'Authentication required';
-    err.errors = { message: 'Authentication required' };
-    err.status = 401;
-    return next(err);
-}
+        const err = new Error('Authentication required');
+        err.title = 'Authentication required';
+        err.errors = { message: 'Authentication required' };
+        err.status = 401;
+        return next(err);
+    }
+];
 
-// backend/utils/auth.js
-// ...
 
 module.exports = { setTokenCookie, restoreUser, requireAuth };

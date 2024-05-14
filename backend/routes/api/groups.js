@@ -47,4 +47,20 @@ router.get('/', async (req, res, next) => {
     });
 });
 
+// router.get('/current', (req, res, next) => {
+
+// });
+
+router.get('/:groupId', async (req, res, next) => {
+    const { id } = req.params.groupId;
+
+    const groupsById = await Group.findByPk(id, {
+        include: GroupImage, Venue
+    });
+
+    
+
+
+})
+
 module.exports = router;
