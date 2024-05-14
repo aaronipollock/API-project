@@ -10,11 +10,11 @@ if (process.env.NODE_ENV === 'production') {
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await GroupImage.bulkCreate(options, [
+  async up (queryInterface, Sequelize) {
+    await GroupImage.bulkCreate([
       {
         groupId: 1,
-        url: 'eventImageUrl1',
+        url: 'groupImageUrl1',
         preview: false,
       },
       {
@@ -22,14 +22,14 @@ module.exports = {
         url: 'groupImageUrl2',
         preview: true,
       }
-    ], { validate: true })
+    ], Object.assign({ validate: true }, options))
   },
 
-  async down(queryInterface, Sequelize) {
+  async down (queryInterface, Sequelize) {
     options.tableName = 'GroupImages';
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
+    return queryInterface.bulkDelete({
       groupId: { [Op.in]: [1, 2] }
-    }, {});
+    }, options);
   }
 };

@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await Attendance.bulkCreate(options, [
+    await Attendance.bulkCreate([
       {
         eventId: 1,
         userId: 1,
@@ -21,14 +21,14 @@ module.exports = {
         userId: 2,
         status: 'waitlist',
       }
-    ])
+    ], Object.assign({ validate: true }, options))
   },
 
   async down (queryInterface, Sequelize) {
     options.tableName = 'Attendances';
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
+    return queryInterface.bulkDelete({
       eventId: { [Op.in]: [1, 2] }
-    }, {});
+    }, options);
   }
 };

@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await Event.bulkCreate(options, [
+    await Event.bulkCreate([
       {
         groupId: 1,
         name: 'Tennis Group First Meet and Greet',
@@ -26,16 +26,16 @@ module.exports = {
         startDate: '2024-11-20 20:00:00',
         endDate: '2024-11-20 22:00:00'
       }
-    ], { validate: true} )
+    ], Object.assign({ validate: true }, options))
   },
 
   async down(queryInterface, Sequelize) {
     options.tableName = 'Events';
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
+    return queryInterface.bulkDelete({
       name: { [Op.in]: [
         'Tennis Group First Meet and Greet',
         'Tennis Singles'] }
-    }, {});
+    }, options);
   }
 };
