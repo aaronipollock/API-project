@@ -28,8 +28,8 @@ module.exports = {
   async down (queryInterface, Sequelize) {
     options.tableName = 'EventImages';
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete({
+    return queryInterface.bulkDelete(options, {
       eventId: { [Op.in]: [1, 2] }
-    }, options);
+    });
   }
 };

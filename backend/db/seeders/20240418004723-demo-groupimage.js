@@ -15,7 +15,7 @@ module.exports = {
       {
         groupId: 1,
         url: 'groupImageUrl1',
-        preview: false,
+        preview: true,
       },
       {
         groupId: 2,
@@ -28,8 +28,8 @@ module.exports = {
   async down (queryInterface, Sequelize) {
     options.tableName = 'GroupImages';
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete({
+    return queryInterface.bulkDelete(options, {
       groupId: { [Op.in]: [1, 2] }
-    }, options);
+    });
   }
 };

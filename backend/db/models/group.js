@@ -23,16 +23,21 @@ module.exports = (sequelize, DataTypes) => {
         models.GroupImage,
         { foreignKey: 'groupId' }
       )
+      Group.hasMany(
+        models.Membership,
+        { foreignKey: 'groupid'}
+      )
       Group.belongsTo(
         models.User,
         { foreignKey: 'organizerId' }
-        )
-        Group.belongsToMany(
-          models.User, {
-            through: 'Membership',
-            otherKey: 'userId',
-            foreignKey: 'groupId' }
-        )
+      )
+      Group.belongsToMany(
+        models.User, {
+        through: 'Membership',
+        foreignKey: 'groupId',
+        otherKey: 'userId',
+      }
+      )
     }
   }
   Group.init({
@@ -40,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       validate: {
-        len: [1,60]
+        len: [1, 60]
       }
     },
     about: {

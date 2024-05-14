@@ -8,14 +8,10 @@ const { User } = require('../../db/models');
 
 const router = express.Router();
 
-// backend/routes/api/session.js
-// ...
+
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-// ...
 
-// backend/routes/api/session.js
-// ...
 
 const validateLogin = [
     check('credential')
@@ -28,8 +24,6 @@ const validateLogin = [
     handleValidationErrors
 ];
 
-// backend/routes/api/session.js
-// ...
 
 // Log in
 router.post('/', validateLogin, async (req, res, next) => {
@@ -54,8 +48,8 @@ router.post('/', validateLogin, async (req, res, next) => {
 
     const safeUser = {
         id: user.id,
-        // firstName: user.firstName,
-        // lastName: user.lastName,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
     };
@@ -69,39 +63,30 @@ router.post('/', validateLogin, async (req, res, next) => {
 );
 
 
-
 // Log out
-router.delete(
-    '/',
-    (_req, res) => {
-        res.clearCookie('token');
-        return res.json({ message: 'success' });
-    }
+router.delete('/', (_req, res) => {
+    res.clearCookie('token');
+    return res.json({ message: 'success' });
+}
 );
 
-// ...
-
-// backend/routes/api/session.js
-// ...
 
 // Restore session user
-router.get(
-    '/',
-    (req, res) => {
-        const { user } = req;
-        if (user) {
-            const safeUser = {
-                id: user.id,
-                // firstName: user.firstName,
-                // lastName: user.lastName,
-                email: user.email,
-                username: user.username,
-            };
-            return res.json({
-                user: safeUser
-            });
-        } else return res.json({ user: null });
-    }
+router.get('/', (req, res) => {
+    const { user } = req;
+    if (user) {
+        const safeUser = {
+            id: user.id,
+            firstName: user.firstName,
+            lastname: user.lastName,
+            email: user.email,
+            username: user.username,
+        };
+        return res.json({
+            user: safeUser
+        });
+    } else return res.json({ user: null });
+}
 );
-// ...
+
 module.exports = router;
