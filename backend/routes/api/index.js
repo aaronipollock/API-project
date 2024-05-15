@@ -3,7 +3,7 @@ const router = require("express").Router();
 const groupsRouter = require('./groups.js');
 const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
-const groupRouter = require('./groups.js')
+const venuesRouter = require('./venues.js');
 const { restoreUser } = require("../../utils/auth.js");
 
 
@@ -12,13 +12,13 @@ const { restoreUser } = require("../../utils/auth.js");
   // If current user session is not valid, set req.user to null
 router.use(restoreUser);
 
-router.use('/groups', groupsRouter)
+router.use('/groups', groupsRouter);
 
 router.use('/session', sessionRouter);
 
-router.use('/users', usersRouter);
+router.use('/venues', venuesRouter);
 
-router.use('/groups', groupRouter);
+router.use('/users', usersRouter);
 
 router.post('/test', (req, res) => {
   res.json({ requestBody: req.body });

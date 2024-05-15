@@ -311,10 +311,101 @@ router.delete('/:groupId', requireAuth, async (req, res, next) => {
         })
     }
 
-
     return res.json({
         message: "Successfully deleted"
     })
 });
+
+//Get All Venues for a Group specified by its id
+router.get('/:groupId/venues', requireAuth, async (req, res, next) => {
+    const { groupId } = req.params;
+
+    const group = await Group.findByPk(groupId, {
+        include: {
+            model: Venue, attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            }
+        }
+    });
+
+    // Error if Group does not exist
+    if (!group) {
+        return res.status(404).json({
+            errors: {
+                message: "Group couldn't be found"
+            }
+        })
+    }
+
+    const { user } = req;
+
+    const isCohost = await Membership.findAll({
+        where: {
+            groupId: groupId,
+            status: 'co-host'
+        }
+    })
+
+    const Venues = group.Venues
+
+    if (user.id === group.organizerId || isCohost.length) {
+        return res.json({
+            Venues
+        })
+    } else {
+        return res.status(401).json({
+            errors: {
+                message: "Current User must be the organizer of the group or a member of the group with a status of 'co-host'"
+            }
+        })
+    }
+});
+
+// Create a new Venue for a Group specified by its id
+router.post('/:groupId/venues', requireAuth, async (req, res, next) => {
+    const { groupId } = req.params;
+    const { user } = req;
+
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+        return res.status(404).json({
+            errors: {
+                message: "Group couldn't be found"
+            }
+        })
+    }
+
+    const { address, city, state, lat, lng } = req.body;
+
+    const isCohost = await Membership.findAll({
+        where: {
+            groupId: groupId,
+            status: 'co-host'
+        }
+    })
+
+    if (user.id === group.organizerId || isCohost.length) {
+        const newVenue = await Venue.create({
+            groupId,
+            address,
+            city,
+            state,
+            lat,
+            lng,
+        })
+
+        return res.json({
+            newVenue
+        })
+    } else {
+        return res.status(401).json({
+            errors: {
+                message: "Current User must be the organizer of the group or a member of the group with a status of 'co-host'"
+            }
+        })
+    }
+
+})
 
 module.exports = router;
