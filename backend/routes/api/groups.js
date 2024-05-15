@@ -178,7 +178,23 @@ router.post('/', requireAuth, async (req, res, next) => {
     })
 })
 
+router.post('/:groupId/images', requireAuth, async (req, res, next) => {
+    const { groupId } = req.params;
 
+    const { url, preview } = req.body;
+
+    const newGroupImage = await GroupImage.create({
+        groupId,
+        url,
+        preview,
+    })
+
+    return res.json({
+        id: newGroupImage.id,
+        url: newGroupImage.url,
+        preview: newGroupImage.preview
+    })
+})
 
 
 
