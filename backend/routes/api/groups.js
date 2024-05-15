@@ -150,4 +150,37 @@ router.get('/:groupId', async (req, res, next) => {
     });
 });
 
+router.post('/', requireAuth, async (req, res, next) => {
+
+    const { name, about, type, private, city, state } = req.body;
+
+    const newGroup = await Group.create({
+        name,
+        about,
+        type,
+        private,
+        city,
+        state,
+        organizerId: req.user.id
+    })
+
+    return res.json({
+        id: newGroup.id,
+        organizerId: newGroup.organizerId,
+        name: newGroup.name,
+        about: newGroup.about,
+        type: newGroup.type,
+        private: newGroup.private,
+        city: newGroup.city,
+        state: newGroup.state,
+        createdAt: newGroup.createdAt,
+        updatedAt: newGroup.updatedAt
+    })
+})
+
+
+
+
+
+
     module.exports = router;
