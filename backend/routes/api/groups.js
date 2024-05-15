@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Group, Membership, GroupImage } = require('../../db/models');
+const { User, Group, Membership, GroupImage, Venue } = require('../../db/models');
 
 const router = express.Router();
 
@@ -104,16 +104,50 @@ router.get('/current', requireAuth, async (req, res, next) => {
     });
 });
 
-// router.get('/:groupId', async (req, res, next) => {
-//     const { id } = req.params.groupId;
+router.get('/:groupId', async (req, res, next) => {
+    const { groupId } = req.params;
 
-//     const groupsById = await Group.findByPk(id, {
-//         include: GroupImage, Venue
-//     });
+    const group = await Group.findByPk(groupId, {
+        include: [
+            { model: GroupImage, attributes: ['id', 'url', 'preview'] },
+            { model: User, attributes: ['id', 'firstName', 'lastName'] },
+            { model: Venue, attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            } }
+        ]
+    });
 
+    const memberships = await Membership.findAll({
+        attributes: ['groupId', 'status']
+    });
 
+    let numMem = 0;
+    memberships.forEach((membership) => {
+        if (membership.groupId === group.id && membership.status === 'member') {
+            numMem += 1;
+        }
+    });
 
+    const updatedGroup = {
+        id: group.id,
+        organizerId: group.organizerId,
+        name: group.name,
+        about: group.about,
+        type: group.type,
+        private: group.private,
+        city: group.city,
+        state: group.state,
+        createdAt: group.createdAt,
+        updatedAt: group.updatedAt,
+        numMembers: numMem,
+        GroupImages: group.GroupImages,
+        Organizer: group.User,
+        Venues: group.Venues
+    }
 
-// })
+    return res.json({
+        Groups: updatedGroup,
+    });
+});
 
-module.exports = router;
+    module.exports = router;
