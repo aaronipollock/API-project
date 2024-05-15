@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Venue.hasMany(
         models.Event,
-        { foreignKey: 'venueId' }
+        { foreignKey: 'venueId', onDelete: 'CASCADE', hooks: true }
       )
       Venue.belongsTo(
         models.Group,

@@ -227,6 +227,19 @@ router.put('/:groupId', requireAuth, async (req, res, next) => {
     })
 })
 
+router.delete('/:groupId', requireAuth, async (req, res, next) => {
+    const { groupId } = req.params;
+
+    await Group.destroy(
+        { where:
+            { id: groupId }
+        }
+    )
+
+    return res.json({
+        message: "Successfully deleted"
+    })
+});
 
 
 
