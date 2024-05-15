@@ -196,6 +196,37 @@ router.post('/:groupId/images', requireAuth, async (req, res, next) => {
     })
 })
 
+router.put('/:groupId', requireAuth, async (req, res, next) => {
+    const { groupId } = req.params;
+
+    const updatedGroup = await Group.findByPk(groupId)
+
+
+    const { name, about, type, private, city, state } = req.body;
+
+    await updatedGroup.update({
+        name,
+        about,
+        type,
+        private,
+        city,
+        state,
+    })
+
+    return res.json({
+        id: updatedGroup.id,
+        organizerId: updatedGroup.organizerId,
+        name: updatedGroup.name,
+        about: updatedGroup.about,
+        type: updatedGroup.type,
+        private: updatedGroup.private,
+        city: updatedGroup.city,
+        state: updatedGroup.state,
+        createdAt: updatedGroup.createdAt,
+        updatedAt: updatedGroup.updatedAt
+    })
+})
+
 
 
 
