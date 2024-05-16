@@ -46,15 +46,13 @@ router.put('/:venueId', requireAuth, async (req, res, next) => {
             lng
         })
 
-        return res.json({
-            id: updatedVenue.id,
-            groupId: updatedVenue.groupId,
-            address: updatedVenue.address,
-            city: updatedVenue.city,
-            state: updatedVenue.state,
-            lat: updatedVenue.lat,
-            lng: updatedVenue.lng,
+        const retrievedVenue = await Venue.findByPk(venueId, {
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            }
         })
+
+        return res.json(retrievedVenue)
     } else {
         return res.status(401).json({
             errors: {

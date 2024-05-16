@@ -1,5 +1,6 @@
 // backend/routes/api/index.js
 const router = require("express").Router();
+const eventsRouter = require('./events.js');
 const groupsRouter = require('./groups.js');
 const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
@@ -12,12 +13,10 @@ const { restoreUser } = require("../../utils/auth.js");
   // If current user session is not valid, set req.user to null
 router.use(restoreUser);
 
+router.use('/events', eventsRouter);
 router.use('/groups', groupsRouter);
-
 router.use('/session', sessionRouter);
-
 router.use('/venues', venuesRouter);
-
 router.use('/users', usersRouter);
 
 router.post('/test', (req, res) => {

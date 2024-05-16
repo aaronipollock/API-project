@@ -13,13 +13,17 @@ module.exports = {
     await Event.bulkCreate([
       {
         groupId: 1,
+        venueId: 1,
         name: 'Tennis Group First Meet and Greet',
+        description: 'First meet and greet event for the evening tennis on the water group! Join us online for happy times!',
         type: 'Online',
+        capacity: 10,
+        price: 18.50,
         startDate: '2024-11-19 20:00:00',
         endDate: '2024-11-19 22:00:00'
       },
       {
-        groupId: 2,
+        groupId: 1,
         venueId: 1,
         name: 'Tennis Singles',
         type: 'In person',

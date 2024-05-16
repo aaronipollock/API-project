@@ -37,21 +37,55 @@ const validateSignup = [
 router.post('/', validateSignup, async (req, res) => {
   const { firstName, lastName, email, password, username } = req.body;
   const hashedPassword = bcrypt.hashSync(password);
-  const user = await User.create({ firstName, lastName, email, username, hashedPassword });
+  // fetch user where there's a constraint, if resource exists throw error, if not create user
+  const notUniqueEmail = await User.findAll({
+    attributes: ['email'],
+    where: {
+      email: email,
+    }
+  })
 
-  const safeUser = {
-    id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    username: user.username,
-  };
+  const notUniqueUsername = await User.findAll({
+    attributes: ['username'],
+    where: {
+      username: username
+    }
+  })
+  if (notUniqueEmail.length) {
+    return res.status(500).json(
+      {
+        message: "User already exists",
+        errors: {
+          email: "User with that email already exists"
+        }
+      }
+    )
+  } else if (notUniqueUsername.length) {
+    return res.status(500).json(
+      {
+        "message": "User already exists",
+        "errors": {
+          "username": "User with that username already exists"
+        }
+      }
+    )
+  } else {
+    const user = await User.create({ firstName, lastName, email, username, hashedPassword });
 
-  await setTokenCookie(res, safeUser);
+    const safeUser = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      username: user.username,
+    };
 
-  return res.json({
-    user: safeUser
-  });
+    await setTokenCookie(res, safeUser);
+
+    return res.json({
+      user: safeUser
+    });
+  }
 }
 );
 

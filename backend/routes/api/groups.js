@@ -3,7 +3,7 @@ const { Op, UUID } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { User, Group, Membership, GroupImage, Venue } = require('../../db/models');
+const { User, Group, Membership, GroupImage, Venue, Event, Attendance, EventImage } = require('../../db/models');
 
 const router = express.Router();
 
@@ -43,7 +43,7 @@ router.get('/', async (req, res, next) => {
     });
 
     return res.json({
-        Groups: updatedGroups,
+        Groups: updatedGroups
     });
 });
 
@@ -158,9 +158,9 @@ router.get('/:groupId', async (req, res, next) => {
         Venues: group.Venues
     }
 
-    return res.json({
-        Groups: updatedGroup,
-    });
+    return res.json(
+        updatedGroup,
+    );
 });
 
 //Create a Group
@@ -178,18 +178,11 @@ router.post('/', requireAuth, async (req, res, next) => {
         organizerId: req.user.id
     })
 
-    return res.json({
-        id: newGroup.id,
-        organizerId: newGroup.organizerId,
-        name: newGroup.name,
-        about: newGroup.about,
-        type: newGroup.type,
-        private: newGroup.private,
-        city: newGroup.city,
-        state: newGroup.state,
-        createdAt: newGroup.createdAt,
-        updatedAt: newGroup.updatedAt
+    const retrievedGroup = await Group.findOne({
+        order: [['id', 'DESC']]
     })
+
+    return res.status(201).json(retrievedGroup)
 })
 
 //Add an Image to a Group based on the Group's id
@@ -213,11 +206,18 @@ router.post('/:groupId/images', requireAuth, async (req, res, next) => {
     const { user } = req;
     if (user.id === group.organizerId) {
         //Add image
-        newGroupImage = await GroupImage.create({
+        await GroupImage.create({
             groupId,
             url,
             preview,
         })
+
+        const retreievedImage = await GroupImage.findOne({
+            attributes: ['id', 'url', 'preview'],
+            order: [['id', 'DESC']]
+        })
+
+        return res.json(retreievedImage)
     } else {
         return res.status(401).json({
             errors: {
@@ -225,12 +225,6 @@ router.post('/:groupId/images', requireAuth, async (req, res, next) => {
             }
         })
     }
-
-    return res.json({
-        id: newGroupImage.id,
-        url: newGroupImage.url,
-        preview: newGroupImage.preview
-    })
 })
 
 //Edit a Group
@@ -259,6 +253,12 @@ router.put('/:groupId', requireAuth, async (req, res, next) => {
             city,
             state,
         })
+
+        const retrievedGroup = await Group.findByPk(groupId)
+
+        return res.json(
+            retrievedGroup
+        )
     } else {
         return res.status(401).json({
             errors: {
@@ -267,18 +267,6 @@ router.put('/:groupId', requireAuth, async (req, res, next) => {
         })
     }
 
-    return res.json({
-        id: updatedGroup.id,
-        organizerId: updatedGroup.organizerId,
-        name: updatedGroup.name,
-        about: updatedGroup.about,
-        type: updatedGroup.type,
-        private: updatedGroup.private,
-        city: updatedGroup.city,
-        state: updatedGroup.state,
-        createdAt: updatedGroup.createdAt,
-        updatedAt: updatedGroup.updatedAt
-    })
 })
 
 //Delete a Group
@@ -297,12 +285,7 @@ router.delete('/:groupId', requireAuth, async (req, res, next) => {
 
     const { user } = req;
     if (user.id === group.organizerId) {
-        await Group.destroy(
-            {
-                where:
-                    { id: groupId }
-            }
-        )
+        await group.destroy()
     } else {
         return res.status(401).json({
             errors: {
@@ -395,9 +378,16 @@ router.post('/:groupId/venues', requireAuth, async (req, res, next) => {
             lng,
         })
 
-        return res.json({
-            newVenue
+        const retrievedVenue = await Venue.findOne({
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            },
+            order: [['id', 'DESC']],
         })
+
+        return res.json(
+            retrievedVenue
+        )
     } else {
         return res.status(401).json({
             errors: {
@@ -405,7 +395,146 @@ router.post('/:groupId/venues', requireAuth, async (req, res, next) => {
             }
         })
     }
-
 })
+
+// Get all Events of a Group specified by its id
+router.get('/:groupId/events', async (req, res, next) => {
+    const { groupId } = req.params;
+
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+        return res.status(404).json({
+            errors: {
+                message: "Group couldn't be found"
+            }
+        })
+    }
+
+    const events = await Event.findAll({
+        attributes: {
+            exclude: ['description', 'capacity', 'price', 'createdAt', 'updatedAt']
+        },
+        include: [
+            { model: Group, attributes: ['id', 'name', 'city', 'state'] },
+            { model: Venue, attributes: ['id', 'city', 'state'] }
+        ],
+        where: {
+            groupId: groupId
+        }
+    })
+
+    const attendances = await Attendance.findAll({
+        attributes: ['eventId', 'status']
+    })
+
+    const previewImgs = await EventImage.findAll();
+
+    const updatedEvents = events.map((event) => {
+        let numAttending = 0;
+
+        attendances.forEach((attendance) => {
+            if (attendance.eventId === event.id && attendance.status === 'attending') {
+                numAttending++;
+            }
+        });
+
+        let previewImage = null;
+
+        previewImgs.forEach((previewImg) => {
+            if (previewImg.eventId === event.id && previewImg.preview === true) {
+                previewImage = previewImg.url;
+                return;
+            }
+        });
+
+        const updatedEvent = {
+            id: event.id,
+            groupId: event.groupId,
+            venueId: event.venueId,
+            name: event.name,
+            type: event.type,
+            startDate: event.startDate,
+            endDate: event.endDate,
+            numAttending,
+            previewImage,
+            Group: event.Group,
+            Venue: event.Venue,
+        }
+
+        return updatedEvent
+    })
+
+    return res.json({
+        Events: updatedEvents
+    })
+});
+
+// Create an Event for a group specified by its id
+router.post('/:groupId/events', requireAuth, async (req, res, next) => {
+    const { groupId } = req.params;
+    const { user } = req;
+
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+        return res.status(404).json({
+            errors: {
+                message: "Group couldn't be found"
+            }
+        })
+    }
+
+    const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
+
+    const venue = await Venue.findByPk(venueId)
+    if (!venue) {
+        return res.status(404).json({
+            errors: {
+                message: "Venue couldn't be found"
+            }
+        })
+    }
+
+    const isCohost = await Membership.findAll({
+        where: {
+            groupId: groupId,
+            status: 'co-host'
+        }
+    })
+
+    if (user.id === group.organizerId || isCohost.length) {
+        const newEvent = await Event.create({
+            groupId: groupId,
+            venueId,
+            name,
+            type,
+            capacity,
+            price,
+            description,
+            startDate,
+            endDate
+        })
+
+        const retrievedEvent = await Event.findOne({
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            },
+            order: [['id', 'DESC']],
+        })
+
+        return res.json(
+            retrievedEvent
+        )
+    } else {
+        return res.status(401).json({
+            errors: {
+                message: "Current User must be the organizer of the group or a member of the group with a status of 'co-host'"
+            }
+        })
+    }
+})
+
+
 
 module.exports = router;
