@@ -562,7 +562,6 @@ router.get('/:groupId/members', async (req, res, next) => {
             ]
         }
     });
-    console.log('USER', group.User)
 
     if (isOrgOrCo.length) {
         const memberships = await Membership.findAll({
@@ -617,6 +616,59 @@ router.get('/:groupId/members', async (req, res, next) => {
     }
 });
 
+//Request a Membership for a Group based on the Group's id
+router.post('/:groupId/membership', requireAuth, async (req, res, next) => {
+    const { groupId } = req.params;
 
+    const group = await Group.findByPk(groupId)
+    if (!group) {
+        return res.status(404).json({
+            errors: {
+                message: "Group couldn't be found"
+            }
+        })
+    }
+
+    const existsPending = await Membership.findOne({
+        where: {
+            userId: req.user.id,
+            status: 'pending'
+        }
+    })
+
+    const existsMember = await Membership.findOne({
+        where: {
+            userId: req.user.id,
+            status: 'member'
+        }
+    })
+
+    if (existsPending) {
+        return res.status(400).json({
+            message: "Membership has already been requested"
+        })
+    }
+
+    if (existsMember) {
+        return res.status(400).json({
+            message: "User is already a member of the group"
+        })
+    }
+
+    await Membership.create({
+        userId: req.user.id,
+        groupId: groupId,
+        status: 'pending'
+    })
+
+    const request = await Membership.findOne({
+        order: [['id', 'DESC']]
+    });
+
+    return res.json({
+        memberId: request.userId,
+        status: 'pending'
+    });
+})
 
 module.exports = router;
