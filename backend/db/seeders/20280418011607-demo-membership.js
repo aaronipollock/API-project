@@ -15,7 +15,7 @@ module.exports = {
       {
         userId: 1,
         groupId: 1,
-        status: 'co-host'
+        status: 'organizer'
       },
       {
         userId: 2,
@@ -27,6 +27,11 @@ module.exports = {
         groupId: 3,
         status: 'pending'
       },
+      {
+        userId: 4,
+        groupId: 1,
+        status: 'co-host'
+      }
     ], Object.assign({ validate: true }, options));
   },
 

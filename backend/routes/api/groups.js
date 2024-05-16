@@ -533,7 +533,89 @@ router.post('/:groupId/events', requireAuth, async (req, res, next) => {
             }
         })
     }
-})
+});
+
+//Get all Members of a Group specified by it id
+router.get('/:groupId/members', async (req, res, next) => {
+    const { groupId } = req.params;
+
+    const group = await Group.findByPk(groupId, {
+        include: [
+            { model: Membership, attributes: ['status'] },
+            { model: User, attributes: ['id', 'firstName', 'lastName'] }
+        ]
+    })
+    if (!group) {
+        return res.status(404).json({
+            errors: {
+                message: "Group couldn't be found"
+            }
+        })
+    }
+
+    const isOrgOrCo = await Membership.findAll({
+        where: {
+            groupId: groupId,
+            [Op.or]: [
+                { status: 'co-host' },
+                { status: 'organizer' },
+            ]
+        }
+    });
+    console.log('USER', group.User)
+
+    if (isOrgOrCo.length) {
+        const memberships = await Membership.findAll({
+            where: {
+                groupId: groupId,
+            },
+            attributes: ['id', 'status']
+        })
+
+        let stat;
+        const status = memberships.map((membership) => {
+            if (membership.id === group.User.id) {
+                stat = membership.status
+            }
+        })
+        return res.json({
+            Members: [
+                {
+                    id: group.User.id,
+                    firstName: group.User.firstName,
+                    lastName: group.User.lastName,
+                    Membership: {
+                        status: stat
+                    }
+                }
+            ]
+        })
+    } else {
+        const notPending = await Group.findByPk(groupId, {
+            include: [
+                { model: User, attributes: ['id', 'firstName', 'lastName'] },
+                {
+                    model: Membership,
+                    attributes: ['status'],
+                    where: {
+                        [Op.not]: { status: 'pending' },
+                    }
+                }
+            ]
+        })
+
+        return res.json({
+            Members: [
+                {
+                    id: notPending.User.id,
+                    firstName: notPending.User.firstName,
+                    lastName: notPending.User.lastName,
+                    Membership
+                }
+            ]
+        })
+    }
+});
 
 
 
