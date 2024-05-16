@@ -48,10 +48,7 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.ENUM('Online', 'In person'),
     capacity: DataTypes.INTEGER,
     price: {
-      type: DataTypes.DECIMAL,
-      validate: {
-        min: 1,
-      }
+      type: DataTypes.FLOAT,
     },
     startDate: {
       type: DataTypes.DATE,

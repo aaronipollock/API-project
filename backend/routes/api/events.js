@@ -206,7 +206,7 @@ router.put('/:eventId', requireAuth, async (req, res, next) => {
         }
     })
 
-    if (req.user.id === Group.organizerId || isCohost.length) {
+    if (req.user.id === updatedEvent.Group.organizerId || isCohost.length) {
         await updatedEvent.update({
             venueId, name, type, capacity, price, description, startDate, endDate
         });
@@ -221,7 +221,7 @@ router.put('/:eventId', requireAuth, async (req, res, next) => {
     } else {
         return res.status(401).json({
             errors: {
-                message: 'Current User must be the organizer of the group or a member of the group with a status of "co-host"'
+                message: "Current User must be the organizer of the group or a member of the group with a status of 'co-host'"
             }
         })
     }
