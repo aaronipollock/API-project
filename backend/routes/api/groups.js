@@ -205,7 +205,7 @@ router.post('/:groupId/images', requireAuth, async (req, res, next) => {
     //Authorization
     const { user } = req;
     if (user.id === group.organizerId) {
-        //Add image
+        
         await GroupImage.create({
             groupId,
             url,
