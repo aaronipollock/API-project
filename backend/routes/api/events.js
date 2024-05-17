@@ -11,6 +11,27 @@ const router = express.Router();
 // Get all Events
 // Add Query Filters to Get All Events
 router.get('/', async (req, res, next) => {
+    const { page, size, name, type, startDate } = req.params;
+
+    if(!page || parseInt(page) > 10) page = 1;
+    if(!size || parseInt(size) > 20) size = 20;
+
+    if(parseInt(page) < 1 ||
+        parseInt(size) < 1 ||
+        typeof(name) !== 'string' ||
+        typeof(type) !== 'string' ||
+        typeof(startDate) !== 'string') {
+        return res.status(400).json({
+            message: "Bad Request",
+            errors: {
+              page: "Page must be greater than or equal to 1",
+              size: "Size must be greater than or equal to 1",
+              name: "Name must be a string",
+              type: "Type must be 'Online' or 'In Person'",
+              startDate: "Start date must be a valid datetime",
+            }
+        })
+    }
     const events = await Event.findAll({
         attributes: {
             exclude: ['description', 'capacity', 'price', 'createdAt', 'updatedAt']
@@ -18,7 +39,7 @@ router.get('/', async (req, res, next) => {
         include: [
             { model: Group, attributes: ['id', 'name', 'city', 'state'] },
             { model: Venue, attributes: ['id', 'city', 'state'] }]
-    })
+    }, {validate: true})
 
     const attendances = await Attendance.findAll({
         attributes: ['eventId', 'status']
@@ -358,7 +379,7 @@ router.post('/:eventId/attendance', requireAuth, async (req, res, next) => {
             status: 'pending'
         }
     })
-    // console.log('EXISTING: ', existingRequest.length)
+
     if (existingRequest) {
         return res.status(400).json({
             message: "Attendance has already been requested"
@@ -436,8 +457,8 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
             message: "Attendance between the user and the event does not exist"
         })
     }
-
-    const isOrgOrCo = await Membership.findAll({
+    console.log('REQUSERID: ', req.user.id)
+    const isOrgOrCo = await Membership.findOne({
         where: {
             userId: req.user.id,
             [Op.or]: [
@@ -446,8 +467,8 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
             ]
         }
     });
-
-    if (isOrgOrCo.length) {
+    console.log("ISORGCO: ", isOrgOrCo)
+    if (isOrgOrCo) {
         await updatedAttendance.update({
             userId,
             status
