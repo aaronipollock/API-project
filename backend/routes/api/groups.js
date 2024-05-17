@@ -669,6 +669,148 @@ router.post('/:groupId/membership', requireAuth, async (req, res, next) => {
         memberId: request.userId,
         status: 'pending'
     });
+});
+
+//Change the Status of a membership for a group specified by id
+router.put('/:groupId/membership', requireAuth, async (req, res, next) => {
+    const { groupId } = req.params;
+
+    const group = await Group.findByPk(groupId)
+    if (!group) {
+        return res.status(404).json({
+            errors: {
+                message: "Group couldn't be found"
+            }
+        })
+    }
+
+    const { memberId, status } = req.body;
+
+    const memExists = await Membership.findOne({
+        where: {
+            userid: memberId,
+        }
+    })
+
+    if (!memExists) {
+        return res.status(404).json({
+            message: "Membership between the user and the group does not exist"
+        })
+    }
+
+    const userExists = await User.findOne({
+        where: {
+            id: memberId
+        }
+    })
+
+    if (!userExists) {
+        return res.status(404).json({
+            message: "User couldn't be found"
+        })
+    }
+
+    if (status === 'pending') {
+        return res.status(400).json({
+            message: "Bad Request",
+            errors: {
+                status: "Cannot change a membership status to pending"
+            }
+        })
+    }
+
+    const memsByGroupId = await Membership.findAll({
+        where: {
+            groupId: groupId
+        }
+    })
+
+    let isOrganizer = false;
+    if (req.user.id === group.organizerId) {
+        isOrganizer = true;
+    }
+
+    let isCohost = false;
+    if (req.user.id === memsByGroupId.userId && memsByGroupId.status === 'co-host') {
+        isCohost = true;
+    }
+
+    if (isOrganizer === true && memberId === memsByGroupId.userId) {
+        await memsByGroupId.update({
+            status
+        })
+        return res.json({
+            id: memsByGroupId.id,
+            groupId,
+            memberId: memsByGroupId.userId,
+            status
+        })
+    } else if (isCohost === true && memberId === memsByGroupId.userid && status === 'member') {
+        await memsByGroupId.update({
+            status
+        })
+        return res.json({
+            id: memsByGroupId.id,
+            groupId,
+            memberId: memsByGroupId.userId,
+            status
+        })
+    } else {
+        return res.status(401).json({
+            message: "Current User must be the organizer or co-host to change membership status"
+        });
+    }
+})
+
+//Delete membership to a group specified by id
+router.delete('/:groupId/membership/:memberId', requireAuth, async (req, res, next) => {
+    const { groupId, memberId } = req.params;
+
+    const group = await Group.findByPk(groupId);
+    if (!group) {
+        return res.status(404).json({
+            errors: {
+                message: "Group couldn't be found"
+            }
+        })
+    };
+
+    const user = await User.findByPk(memberId);
+    if (!user) {
+        return res.status(404).json({
+            message: "User couldn't be found"
+        })
+    }
+
+    const deleteMembership = await Membership.findOne({
+        where: {
+            groupId: groupId,
+            userId: memberId
+        }
+    });
+
+    if (!deleteMembership) {
+        return res.status(404).json({
+            message: "Membership does not exist for this User"
+        })
+    }
+
+    if (deleteMembership.status === 'organizer' || req.user.id === deleteMembership.userId) {
+        await Membership.destroy({
+            where: {
+                groupId: groupId,
+                userId: memberId
+            }
+        });
+
+        return res.json({
+            message: "Successfully deleted membership from group"
+        })
+    } else {
+        return res.status(401).json({
+            message: "Current User must be the organizer or the user whose membership is being deleted"
+        });
+    }
 })
 
 module.exports = router;
