@@ -285,7 +285,15 @@ router.delete('/:groupId', requireAuth, async (req, res, next) => {
 
     const { user } = req;
     if (user.id === group.organizerId) {
-        await group.destroy()
+        await Group.destroy({
+            where: {
+                id: groupId
+            }
+        })
+
+        return res.json({
+            message: "Successfully deleted"
+        })
     } else {
         return res.status(401).json({
             errors: {
@@ -294,9 +302,6 @@ router.delete('/:groupId', requireAuth, async (req, res, next) => {
         })
     }
 
-    return res.json({
-        message: "Successfully deleted"
-    })
 });
 
 //Get All Venues for a Group specified by its id
@@ -727,7 +732,7 @@ router.put('/:groupId/membership', requireAuth, async (req, res, next) => {
             userId: memberId
         }
     })
-    
+
     let isOrganizer = false;
     if (req.user.id === group.organizerId) {
         isOrganizer = true;

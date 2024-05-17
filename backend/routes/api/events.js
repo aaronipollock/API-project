@@ -11,35 +11,40 @@ const router = express.Router();
 // Get all Events
 // Add Query Filters to Get All Events
 router.get('/', async (req, res, next) => {
-    const { page, size, name, type, startDate } = req.params;
+    let { page, size, name, type, startDate } = req.query;
 
-    if(!page || parseInt(page) > 10) page = 1;
-    if(!size || parseInt(size) > 20) size = 20;
+    page = parseInt(page);
+    size = parseInt(size);
 
-    if(parseInt(page) < 1 ||
-        parseInt(size) < 1 ||
-        typeof(name) !== 'string' ||
-        typeof(type) !== 'string' ||
-        typeof(startDate) !== 'string') {
+    if (isNaN(page) || page <= 0) page = 1;
+    if (isNaN(size) || size <= 0) size = 2;
+
+    if (typeof (name) !== 'string' ||
+        typeof (type) !== 'string' ||
+        (type !== 'Online' && type !== 'In person') ||
+        typeof (startDate) !== 'string') {
         return res.status(400).json({
             message: "Bad Request",
             errors: {
-              page: "Page must be greater than or equal to 1",
-              size: "Size must be greater than or equal to 1",
-              name: "Name must be a string",
-              type: "Type must be 'Online' or 'In Person'",
-              startDate: "Start date must be a valid datetime",
+                page: "Page must be greater than or equal to 1",
+                size: "Size must be greater than or equal to 1",
+                name: "Name must be a string",
+                type: "Type must be 'Online' or 'In Person'",
+                startDate: "Start date must be a valid datetime",
             }
         })
     }
+
     const events = await Event.findAll({
         attributes: {
             exclude: ['description', 'capacity', 'price', 'createdAt', 'updatedAt']
         },
         include: [
             { model: Group, attributes: ['id', 'name', 'city', 'state'] },
-            { model: Venue, attributes: ['id', 'city', 'state'] }]
-    }, {validate: true})
+            { model: Venue, attributes: ['id', 'city', 'state'] }],
+        limit: size,
+        offset: size * (page - 1)
+    })
 
     const attendances = await Attendance.findAll({
         attributes: ['eventId', 'status']
@@ -267,7 +272,13 @@ router.delete('/:eventId', requireAuth, async (req, res, next) => {
         )
     }
 
-    const isCohost = await Membership.findAll({
+    const isOrganizer = await Group.findOne({
+        where: {
+            organizerId: req.user.id,
+        }
+    })
+
+    const isCohost = await Membership.findOne({
         where: {
             groupId: deletedEvent.groupId,
             userId: req.user.id,
@@ -275,12 +286,12 @@ router.delete('/:eventId', requireAuth, async (req, res, next) => {
         }
     })
 
-    if (req.user.id === Group.organizerId || isCohost.length) {
+    if (isOrganizer || isCohost) {
         await deletedEvent.destroy();
     } else {
         return res.status(401).json({
             errors: {
-                message: 'Current User must be the organizer of the group or a member of the group with a status of "co-host" to delete'
+                message: 'Current User must be the organizer of the group or a member of the group with a status of co-host to delete'
             }
         })
     }
@@ -386,7 +397,6 @@ router.post('/:eventId/attendance', requireAuth, async (req, res, next) => {
         })
     }
 
-
     const memsByGroupId = await Membership.findOne({
         where: {
             groupId: event.groupId,
@@ -437,7 +447,7 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
             message: "User couldn't be found"
         })
     };
-
+    console.log('EVENTID: ', eventId)
     const event = await Event.findByPk(eventId);
     if (!event) {
         return res.status(404).json({
@@ -457,18 +467,20 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
             message: "Attendance between the user and the event does not exist"
         })
     }
-    console.log('REQUSERID: ', req.user.id)
-    const isOrgOrCo = await Membership.findOne({
+
+    const isOrganizer = await Group.findOne({
         where: {
-            userId: req.user.id,
-            [Op.or]: [
-                { status: 'co-host' },
-                { status: 'organizer' },
-            ]
+            organizerId: req.user.id,
         }
+    })
+
+
+    const isCohost = await Membership.findOne({
+        where: { status: 'co-host', userId: req.user.id }
     });
-    console.log("ISORGCO: ", isOrgOrCo)
-    if (isOrgOrCo) {
+
+    console.log(isCohost)
+    if (isCohost || isOrganizer) {
         await updatedAttendance.update({
             userId,
             status
@@ -492,7 +504,7 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
     } else {
         return res.status(401).json({
             errors: {
-                message: 'Current User must be an organizer or co-host to change status of attendance'
+                message: 'Current User must be an organizer or co-host to change status of attending'
             }
         })
     }

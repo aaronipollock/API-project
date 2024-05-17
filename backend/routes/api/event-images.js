@@ -22,18 +22,21 @@ router.delete('/:imageId', requireAuth, async (req, res, next) => {
         })
     }
 
-    const isOrgOrCo = await Membership.findAll({
+    const isOrganizer = await Group.findOne({
         where: {
-            groupid: image.Event.groupId,
+            organizerId: req.user.id,
+        }
+    })
+
+    const isCohost = await Membership.findOne({
+        where: {
+            // gourpId: image.eventId,
             userId: req.user.id,
-            [Op.or]: [
-                { status: 'co-host' },
-                { status: 'organizer' },
-            ]
+            status: 'co-host'
         }
     });
 
-    if (isOrgOrCo.length) {
+    if (isOrganizer || isCohost) {
         await EventImage.destroy({
             where: {
                 id: imageId
