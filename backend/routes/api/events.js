@@ -147,6 +147,7 @@ router.post('/:eventId/images', requireAuth, async (req, res, next) => {
     const isCohost = await Membership.findAll({
         where: {
             groupId: event.groupId,
+            userId: user.id,
             status: 'co-host'
         }
     })
@@ -203,6 +204,7 @@ router.put('/:eventId', requireAuth, async (req, res, next) => {
     const isCohost = await Membership.findAll({
         where: {
             groupId: updatedEvent.groupId,
+            userId: req.user.id,
             status: 'co-host'
         }
     })
@@ -247,6 +249,7 @@ router.delete('/:eventId', requireAuth, async (req, res, next) => {
     const isCohost = await Membership.findAll({
         where: {
             groupId: deletedEvent.groupId,
+            userId: req.user.id,
             status: 'co-host'
         }
     })
@@ -267,14 +270,13 @@ router.delete('/:eventId', requireAuth, async (req, res, next) => {
 })
 
 //Get all Attendees of an Event specified by its id
-router.get('/:eventId/antendees', async (req, res, next) => {
+router.get('/:eventId/attendees', async (req, res, next) => {
     const { eventId } = req.params;
 
     const event = await Event.findByPk(eventId, {
         include: [
-            { model: Attendance, attributes: ['status'] },
             { model: Group },
-            { model: User, attributes: ['id', 'firstName', 'lastname'] }
+            { model: User, attributes: ['id', 'firstName', 'lastname'], include: { model: Attendance, attributes: ['status'] } }
         ]
     })
 
@@ -287,6 +289,7 @@ router.get('/:eventId/antendees', async (req, res, next) => {
     const isOrgOrCo = await Membership.findAll({
         where: {
             groupId: event.Group.id,
+            userId: req.user.id,
             [Op.or]: [
                 { status: 'co-host' },
                 { status: 'organizer' },
@@ -294,39 +297,32 @@ router.get('/:eventId/antendees', async (req, res, next) => {
         }
     });
 
-    if (isOrgOrCo) {
+    if (isOrgOrCo.length) {
+        const pending = await User.findAll({
+            attributes: ['id', 'firstName', 'lastName'],
+            include: {
+                model: Attendance, attributes: ['status'], where: {
+                    eventId: eventId,
+                },
+            }
+        });
         return res.json({
-            Attendees: [
-                event.User,
-                event.Attendance
-            ]
+            Attendees: pending
         })
     } else {
-        const notPending = await Event.findByPk(eventId, {
-            include: [
-                { model: User, attributes: ['id', 'firstName', 'lastname'] },
-                {
-                    model: Attendance,
-                    attributes: ['status'],
-                    where: {
-                        [Op.not]: { status: 'pending' }
-                    }
+        const notPending = await User.findAll({
+            attributes: ['id', 'firstName', 'lastName'],
+            include: {
+                model: Attendance, attributes: ['status'], where: {
+                    eventId: eventId,
+                    [Op.not]: [{ status: 'pending' }]
                 },
-            ]
+            }
         });
 
         return res.json({
-            Attendees: [
-                {
-                    id: notPending.User.id,
-                    firstName: notPending.User.firstName,
-                    lastName: notPending.User.lastName,
-                    Attendance
-                }
-            ]
+            Attendees: notPending
         })
-
-
     }
 });
 
@@ -334,24 +330,11 @@ router.get('/:eventId/antendees', async (req, res, next) => {
 router.post('/:eventId/attendance', requireAuth, async (req, res, next) => {
     const { eventId } = req.params;
 
-    const event = await Event.findByPk(eventid)
+    const event = await Event.findByPk(eventId)
 
     if (!event) {
         return res.status(404).json({
             message: "Event couldn't be found"
-        })
-    }
-
-    const existingRequest = await Attendance.findOne({
-        where: {
-            eventId: eventId,
-            userId: req.user.id,
-            status: 'pending'
-        }
-    })
-    if (existingRequest) {
-        return res.status(400).json({
-            message: "Attendance has already been requested"
         })
     }
 
@@ -368,13 +351,29 @@ router.post('/:eventId/attendance', requireAuth, async (req, res, next) => {
         })
     }
 
-    const memsByGroupId = await Membership.findAll({
+    const existingRequest = await Attendance.findOne({
         where: {
-            groupId: event.groupId,
-            status: 'member'
+            eventId: eventId,
+            userId: req.user.id,
+            status: 'pending'
         }
     })
-    if (req.user.id === memsByGroupId.userId) {
+    // console.log('EXISTING: ', existingRequest.length)
+    if (existingRequest) {
+        return res.status(400).json({
+            message: "Attendance has already been requested"
+        })
+    }
+
+
+    const memsByGroupId = await Membership.findOne({
+        where: {
+            groupId: event.groupId,
+            userId: req.user.id,
+            [Op.not]: { status: 'pending' }
+        }
+    })
+    if (memsByGroupId) {
         await Attendance.create({
             eventId,
             userId: req.user.id,
@@ -387,6 +386,12 @@ router.post('/:eventId/attendance', requireAuth, async (req, res, next) => {
         })
 
         return res.json(retrievedRequest)
+    } else {
+        return res.status(401).json({
+            errors: {
+                message: 'Current User must be a member of the group to request attendance'
+            }
+        })
     }
 });
 
@@ -426,7 +431,7 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
         }
     })
 
-    if(!updatedAttendance) {
+    if (!updatedAttendance) {
         return res.status(404).json({
             message: "Attendance between the user and the event does not exist"
         })
@@ -434,7 +439,7 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
 
     const isOrgOrCo = await Membership.findAll({
         where: {
-            userId: userId,
+            userId: req.user.id,
             [Op.or]: [
                 { status: 'co-host' },
                 { status: 'organizer' },
@@ -442,13 +447,14 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
         }
     });
 
-    if (isOrgOrCo) {
+    if (isOrgOrCo.length) {
         await updatedAttendance.update({
             userId,
             status
         })
 
         const retrievedAttendance = await Attendance.findOne({
+            attributes: ['id', 'eventId', 'userId', 'status'],
             where: {
                 eventId,
                 userId,
@@ -456,7 +462,18 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
             }
         });
 
-        return res.json(retrievedAttendance)
+        return res.json({
+            id: retrievedAttendance.id,
+            eventId: retrievedAttendance.eventId,
+            userId: retrievedAttendance.userId,
+            status: retrievedAttendance.status
+        })
+    } else {
+        return res.status(401).json({
+            errors: {
+                message: 'Current User must be an organizer or co-host to change status of attendance'
+            }
+        })
     }
 });
 
@@ -485,7 +502,7 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res, next
         }
     })
 
-    if(!deleteAttendance) {
+    if (!deleteAttendance) {
         return res.status(404).json({
             message: "Attendance does not exist for this User"
         })
@@ -497,8 +514,9 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res, next
             status: 'organizer'
         }
     })
-
-    if (isOrg || req.user.id === userId) {
+    console.log('REQUSERID: ', req.user.id)
+    console.log('USERID', userId)
+    if (isOrg || req.user.id == userId) {
         await Attendance.destroy({
             where: {
                 eventId,
@@ -507,6 +525,12 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res, next
         })
         return res.json({
             message: "Successfully deleted attendance from event"
+        })
+    } else {
+        return res.status(401).json({
+            errors: {
+                message: 'Current User must be an organizer or user whose attendance is being deleted'
+            }
         })
     }
 });

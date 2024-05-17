@@ -325,6 +325,7 @@ router.get('/:groupId/venues', requireAuth, async (req, res, next) => {
     const isCohost = await Membership.findAll({
         where: {
             groupId: groupId,
+            userId: user.id,
             status: 'co-host'
         }
     })
@@ -364,6 +365,7 @@ router.post('/:groupId/venues', requireAuth, async (req, res, next) => {
     const isCohost = await Membership.findAll({
         where: {
             groupId: groupId,
+            userId: user.id,
             status: 'co-host'
         }
     })
@@ -499,6 +501,7 @@ router.post('/:groupId/events', requireAuth, async (req, res, next) => {
     const isCohost = await Membership.findAll({
         where: {
             groupId: groupId,
+            userId: user.id,
             status: 'co-host'
         }
     })
@@ -629,31 +632,30 @@ router.post('/:groupId/membership', requireAuth, async (req, res, next) => {
         })
     }
 
-    const existsPending = await Membership.findOne({
-        where: {
-            userId: req.user.id,
-            status: 'pending'
-        }
-    })
-
     const existsMember = await Membership.findOne({
         where: {
             userId: req.user.id,
-            status: 'member'
+            [Op.or]: [{ status: 'co-host' }, { status: 'member' }, { status: 'organizer' }]
         }
     })
-
-    if (existsPending) {
-        return res.status(400).json({
-            message: "Membership has already been requested"
-        })
-    }
-
     if (existsMember) {
         return res.status(400).json({
             message: "User is already a member of the group"
         })
     }
+
+    const existsPending = await Membership.findAll({
+        where: {
+            userId: req.user.id
+        }
+    })
+
+    if (existsPending.length) {
+        return res.status(400).json({
+            message: "Membership has already been requested"
+        })
+    }
+
 
     await Membership.create({
         userId: req.user.id,
@@ -719,12 +721,13 @@ router.put('/:groupId/membership', requireAuth, async (req, res, next) => {
         })
     }
 
-    const memsByGroupId = await Membership.findAll({
+    const memsByGroupId = await Membership.findOne({
         where: {
-            groupId: groupId
+            groupId: groupId,
+            userId: memberId
         }
     })
-
+    
     let isOrganizer = false;
     if (req.user.id === group.organizerId) {
         isOrganizer = true;
@@ -739,21 +742,39 @@ router.put('/:groupId/membership', requireAuth, async (req, res, next) => {
         await memsByGroupId.update({
             status
         })
-        return res.json({
-            id: memsByGroupId.id,
-            groupId,
-            memberId: memsByGroupId.userId,
-            status
+
+        const retrievedMem = await Membership.findOne({
+            attributes: ['id', 'groupId', 'userId', 'status'],
+            where: {
+                groupId: groupId,
+                userId: memsByGroupId.userId,
+                status: status
+            }
         })
-    } else if (isCohost === true && memberId === memsByGroupId.userid && status === 'member') {
+        return res.json({
+            id: retrievedMem.id,
+            groupId: retrievedMem.groupId,
+            memberId: retrievedMem.userId,
+            status: retrievedMem.status
+        })
+    } else if (isCohost === true && memberId === memsByGroupId.userId && status === 'member') {
         await memsByGroupId.update({
             status
         })
+
+        const retrievedMem = await Membership.findOne({
+            attributes: ['id', 'groupId', 'userId', 'status'],
+            where: {
+                groupId: groupId,
+                userId: memsByGroupId.userId,
+                status: status
+            }
+        })
         return res.json({
-            id: memsByGroupId.id,
-            groupId,
-            memberId: memsByGroupId.userId,
-            status
+            id: retrievedMem.id,
+            groupId: retrievedMem.groupId,
+            memberId: retrievedMem.userId,
+            status: retrievedMem.status
         })
     } else {
         return res.status(401).json({

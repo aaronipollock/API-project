@@ -3,7 +3,7 @@ const { Op, UUID } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { Event, Venue, Membership, Group, User, Attendance, EventImage } = require('../../db/models');
+const { Event, Venue, Membership, Group, User, Attendance, EventImage, GroupImage } = require('../../db/models');
 const attendance = require('../../db/models/attendance');
 
 const router = express.Router();
@@ -31,7 +31,7 @@ router.delete('/:imageId', requireAuth, async (req, res, next) => {
         }
     });
 
-    if (isOrgOrCo) {
+    if (isOrgOrCo.length) {
         await GroupImage.destroy({
             where: {
                 id: imageId

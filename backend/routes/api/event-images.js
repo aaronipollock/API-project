@@ -33,13 +33,12 @@ router.delete('/:imageId', requireAuth, async (req, res, next) => {
         }
     });
 
-    if (isOrgOrCo) {
+    if (isOrgOrCo.length) {
         await EventImage.destroy({
             where: {
                 id: imageId
             }
         })
-
         return res.json({
             message: "Successfully deleted"
         })
