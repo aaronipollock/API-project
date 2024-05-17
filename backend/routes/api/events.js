@@ -9,6 +9,7 @@ const attendance = require('../../db/models/attendance');
 const router = express.Router();
 
 // Get all Events
+// Add Query Filters to Get All Events
 router.get('/', async (req, res, next) => {
     const events = await Event.findAll({
         attributes: {
@@ -508,6 +509,9 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res, next
             message: "Successfully deleted attendance from event"
         })
     }
-})
+});
+
+
+
 
 module.exports = router;
