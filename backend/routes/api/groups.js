@@ -70,9 +70,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
         }
     });
 
-    const memberships = await Membership.findAll({
-        attributes: ['groupId', 'status']
-    });
+    const memberships = await Membership.findAll();
 
     const previewImages = await GroupImage.findAll();
 
@@ -80,7 +78,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
         let numMem = 0;
 
         memberships.forEach((membership) => {
-            if (membership.groupId === group.id && membership.status === 'member') {
+            if (membership.groupId === group.id && membership.status !== 'pending') {
                 numMem += 1;
             }
         });
@@ -105,6 +103,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
         Groups: updatedGroups,
     });
 });
+
 
 //Get details of a Groups from an id
 router.get('/:groupId', async (req, res, next) => {
@@ -205,7 +204,7 @@ router.post('/:groupId/images', requireAuth, async (req, res, next) => {
     //Authorization
     const { user } = req;
     if (user.id === group.organizerId) {
-        
+
         await GroupImage.create({
             groupId,
             url,
