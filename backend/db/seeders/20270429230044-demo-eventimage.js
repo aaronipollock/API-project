@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await EventImage.bulkCreate([
+    await EventImage.bulkCreate(options, [
       {
         eventId: 1,
         url: 'eventImageUrl1',
@@ -22,7 +22,7 @@ module.exports = {
         url: 'eventImageUrl2',
         preview: false,
       }
-    ], Object.assign({ validate: true }, options))
+    ], { validate: true });
   },
 
   async down (queryInterface, Sequelize) {
@@ -30,6 +30,6 @@ module.exports = {
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
       eventId: { [Op.in]: [1, 2] }
-    });
+    }, {});
   }
 };

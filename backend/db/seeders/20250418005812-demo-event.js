@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await Event.bulkCreate([
+    await Event.bulkCreate(options, [
       {
         groupId: 1,
         venueId: 1,
@@ -30,7 +30,7 @@ module.exports = {
         startDate: '2024-11-20 20:00:00',
         endDate: '2024-11-20 22:00:00'
       }
-    ], Object.assign({ validate: true }, options))
+    ], { validate: true });
   },
 
   async down(queryInterface, Sequelize) {
@@ -40,6 +40,6 @@ module.exports = {
       name: { [Op.in]: [
         'Tennis Group First Meet and Greet',
         'Tennis Singles'] }
-    });
+    }, {});
   }
 };
