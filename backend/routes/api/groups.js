@@ -49,58 +49,64 @@ router.get('/', async (req, res, next) => {
 
 //Get all Groups joined or organized by the Current User
 router.get('/current', requireAuth, async (req, res, next) => {
-    const { user } = req;
 
-    const Groups = await Group.findAll({
-        include: [
-            {
+    router.get('/current', requireAuth, async (req, res, next) => {
+        const { user } = req;
+
+        const Groups = await Group.findAll({
+            include: {
                 model: Membership,
                 attributes: [],
-                include: {
-                    model: User,
-                    attributes: []
-                },
-                where: {
-                    userId: user.id,
-                    status: 'member'
-                },
-                required: false
+                include: { model: User }
             },
-            {
-                model: Membership,
-                attributes: [],
-                where: {
-                    status: 'organizer'
-                },
-                required: false
-            },
-            {
-                model: GroupImage,
-                attributes: ['url', 'preview'],
-                required: false
+            where: {
+                [Op.or]: [
+                    {
+                        organizerId: user.id
+                    },
+                    {
+                        '$Memberships.userId$': user.id,
+                        '$Memberships.status$': 'member'
+                    }
+                ]
             }
-        ],
-        where: {
-            organizerId: user.id
-        }
-    });
+        });
 
-    const updatedGroups = Groups.map((group) => {
-        const groupJson = group.toJSON();
-        const numMembers = groupJson.Memberships ? groupJson.Memberships.filter(m => m.status !== 'pending').length : 0;
-        const previewImage = groupJson.GroupImages ? groupJson.GroupImages.find(img => img.preview === true) : null;
+        const memberships = await Membership.findAll();
 
-        return {
-            ...groupJson,
-            numMembers: numMembers,
-            previewImage: previewImage ? previewImage.url : null,
-        };
-    });
+        const previewImages = await GroupImage.findAll();
 
-    return res.json({
-        Groups: updatedGroups,
+        const updatedGroups = Groups.map((group) => {
+            let numMem = 1;
+
+            memberships.forEach((membership) => {
+                if (membership.groupId === group.id && membership.status !== 'pending') {
+                    numMem += 1;
+                }
+            });
+
+            let previewImg = null;
+
+            previewImages.forEach((previewImage) => {
+                if (previewImage.groupId === group.id && previewImage.preview === true) {
+                    previewImg = previewImage.url;
+                    return;
+                }
+            });
+
+            return {
+                ...group.toJSON(),
+                numMembers: numMem,
+                previewImage: previewImg,
+            }
+        });
+
+        return res.json({
+            Groups: updatedGroups,
+        });
     });
 });
+
 
 //Get details of a Groups from an id
 router.get('/:groupId', async (req, res, next) => {
@@ -130,7 +136,7 @@ router.get('/:groupId', async (req, res, next) => {
         attributes: ['groupId', 'status']
     });
 
-    let numMem = 1;
+    let numMem = 0;
     memberships.forEach((membership) => {
         if (membership.groupId === group.id && membership.status === 'member') {
             numMem += 1;
