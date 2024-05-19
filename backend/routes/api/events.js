@@ -547,8 +547,7 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res, next
             status: 'organizer'
         }
     })
-    console.log('REQUSERID: ', req.user.id)
-    console.log('USERID', userId)
+  
     if (isOrg || req.user.id == userId) {
         await Attendance.destroy({
             where: {

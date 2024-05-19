@@ -748,7 +748,7 @@ router.put('/:groupId/membership', requireAuth, async (req, res, next) => {
 
     const memExists = await Membership.findOne({
         where: {
-            userid: memberId,
+            userId: memberId,
         }
     })
 
