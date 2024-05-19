@@ -27,7 +27,7 @@ router.put('/:venueId', requireAuth, async (req, res, next) => {
     const isCohost = await Membership.findAll({
         where: {
             groupId: updatedVenue.groupId,
-            userid: user.id,
+            userId: user.id,
             status: 'co-host'
         }
     });
@@ -37,7 +37,7 @@ router.put('/:venueId', requireAuth, async (req, res, next) => {
             organizerId: user.id,
         }
     })
-    
+
     if (isOrganizer.length || isCohost.length) {
         await updatedVenue.update({
             address,
