@@ -19,10 +19,10 @@ router.get('/', async (req, res, next) => {
     if (isNaN(page) || page <= 0) page = 1;
     if (isNaN(size) || size <= 0) size = 2;
 
-    if (typeof (name) !== 'string' ||
-        typeof (type) !== 'string' ||
-        (type !== 'Online' && type !== 'In person') ||
-        typeof (startDate) !== 'string') {
+    if ((name && typeof (name) !== 'string') ||
+        (type && typeof (type) !== 'string') ||
+        (type && type !== 'Online' && type !== 'In person') ||
+        (startDate && typeof (startDate) !== 'string')) {
         return res.status(400).json({
             message: "Bad Request",
             errors: {
