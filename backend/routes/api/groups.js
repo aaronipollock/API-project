@@ -49,63 +49,61 @@ router.get('/', async (req, res, next) => {
 
 //Get all Groups joined or organized by the Current User
 router.get('/current', requireAuth, async (req, res, next) => {
+    const { user } = req;
 
-    router.get('/current', requireAuth, async (req, res, next) => {
-        const { user } = req;
+    const Groups = await Group.findAll({
+        include: {
+            model: Membership,
+            attributes: [],
+            include: { model: User }
+        },
+        where: {
+            [Op.or]: [
+                {
+                    organizerId: user.id
+                },
+                {
+                    '$Memberships.userId$': user.id,
+                    '$Memberships.status$': 'member'
+                }
+            ]
+        }
+    });
 
-        const Groups = await Group.findAll({
-            include: {
-                model: Membership,
-                attributes: [],
-                include: { model: User }
-            },
-            where: {
-                [Op.or]: [
-                    {
-                        organizerId: user.id
-                    },
-                    {
-                        '$Memberships.userId$': user.id,
-                        '$Memberships.status$': 'member'
-                    }
-                ]
+    const memberships = await Membership.findAll();
+
+    const previewImages = await GroupImage.findAll();
+
+    const updatedGroups = Groups.map((group) => {
+        let numMem = 1;
+
+        memberships.forEach((membership) => {
+            if (membership.groupId === group.id && membership.status !== 'pending') {
+                numMem += 1;
             }
         });
 
-        const memberships = await Membership.findAll();
+        let previewImg = null;
 
-        const previewImages = await GroupImage.findAll();
-
-        const updatedGroups = Groups.map((group) => {
-            let numMem = 1;
-
-            memberships.forEach((membership) => {
-                if (membership.groupId === group.id && membership.status !== 'pending') {
-                    numMem += 1;
-                }
-            });
-
-            let previewImg = null;
-
-            previewImages.forEach((previewImage) => {
-                if (previewImage.groupId === group.id && previewImage.preview === true) {
-                    previewImg = previewImage.url;
-                    return;
-                }
-            });
-
-            return {
-                ...group.toJSON(),
-                numMembers: numMem,
-                previewImage: previewImg,
+        previewImages.forEach((previewImage) => {
+            if (previewImage.groupId === group.id && previewImage.preview === true) {
+                previewImg = previewImage.url;
+                return;
             }
         });
 
-        return res.json({
-            Groups: updatedGroups,
-        });
+        return {
+            ...group.toJSON(),
+            numMembers: numMem,
+            previewImage: previewImg,
+        }
+    });
+
+    return res.json({
+        Groups: updatedGroups,
     });
 });
+
 
 
 //Get details of a Groups from an id
