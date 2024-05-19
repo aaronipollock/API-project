@@ -447,7 +447,7 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
             message: "User couldn't be found"
         })
     };
-    console.log('EVENTID: ', eventId)
+    
     const event = await Event.findByPk(eventId);
     if (!event) {
         return res.status(404).json({
@@ -547,7 +547,7 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res, next
             status: 'organizer'
         }
     })
-  
+
     if (isOrg || req.user.id == userId) {
         await Attendance.destroy({
             where: {
