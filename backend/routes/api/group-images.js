@@ -28,7 +28,7 @@ router.delete('/:imageId', requireAuth, async (req, res, next) => {
 
     const isCohost = await Membership.findOne({
         where: {
-            groupid: image.groupId,
+            groupId: image.groupId,
             userId: req.user.id,
             status: 'co-host'
         }
