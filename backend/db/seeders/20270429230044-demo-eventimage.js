@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await EventImage.bulkCreate(options, [
+    await EventImage.bulkCreate([
       {
         eventId: 1,
         url: 'eventImageUrl1',

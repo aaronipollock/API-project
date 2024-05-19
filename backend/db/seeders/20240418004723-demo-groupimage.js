@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await GroupImage.bulkCreate(options, [
+    await GroupImage.bulkCreate([
       {
         groupId: 1,
         url: 'groupImageUrl1',
