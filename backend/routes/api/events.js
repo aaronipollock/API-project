@@ -308,7 +308,7 @@ router.get('/:eventId/attendees', async (req, res, next) => {
     const event = await Event.findByPk(eventId, {
         include: [
             { model: Group },
-            { model: User, attributes: ['id', 'firstName', 'lastname'], include: { model: Attendance, attributes: ['status'] } }
+            { model: User, attributes: ['id', 'firstName', 'lastName'], include: { model: Attendance, attributes: ['status'] } }
         ]
     })
 
@@ -447,7 +447,7 @@ router.put('/:eventId/attendance', requireAuth, async (req, res, next) => {
             message: "User couldn't be found"
         })
     };
-    
+
     const event = await Event.findByPk(eventId);
     if (!event) {
         return res.status(404).json({
