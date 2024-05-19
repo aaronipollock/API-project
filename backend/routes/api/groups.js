@@ -18,10 +18,10 @@ router.get('/', async (req, res, next) => {
     const previewImages = await GroupImage.findAll();
 
     const updatedGroups = Groups.map((group) => {
-        let numMem = 0;
+        let numMem = 1;
 
         memberships.forEach((membership) => {
-            if (membership.groupId === group.id && membership.status === 'member') {
+            if (membership.groupId === group.id && (membership.status === 'member' || membership.status === 'co-host')) {
                 numMem += 1;
             }
         });

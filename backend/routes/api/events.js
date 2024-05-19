@@ -16,10 +16,12 @@ router.get('/', async (req, res, next) => {
     page = parseInt(page);
     size = parseInt(size);
 
-    if (isNaN(page) || page <= 0) page = 1;
-    if (isNaN(size) || size <= 0) size = 2;
+    if (isNaN(page) || page > 10) page = 1;
+    if (isNaN(size) || size > 20) size = 20;
 
-    if ((name && typeof (name) !== 'string') ||
+    if ((page <= 0) ||
+        (size <= 0) ||
+        (name && typeof (name) !== 'string') ||
         (type && typeof (type) !== 'string') ||
         (type && type !== 'Online' && type !== 'In person') ||
         (startDate && typeof (startDate) !== 'string')) {
@@ -82,6 +84,8 @@ router.get('/', async (req, res, next) => {
             previewImage,
             Group: event.Group,
             Venue: event.Venue,
+            page: page,
+            size: size
         }
 
         return updatedEvent
