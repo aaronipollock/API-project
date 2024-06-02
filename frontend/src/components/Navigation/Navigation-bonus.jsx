@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton-bonus';
 import './Navigation.css';
+import '../../styles/header.css'
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
