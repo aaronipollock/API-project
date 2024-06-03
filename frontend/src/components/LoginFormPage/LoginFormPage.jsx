@@ -2,7 +2,7 @@ import { useState } from 'react';
 import * as sessionActions from '../../store/session';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import './LoginForm.css';
+import './LoginFormPage.css';
 
 function LoginFormPage() {
   const dispatch = useDispatch();
@@ -25,42 +25,38 @@ function LoginFormPage() {
   };
 
   return (
-    <div className='login-page'>
-      <h1 className='login-text'>Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          {/* <div>
-            Username or Email
-          </div> */}
-          <div>
-            <input
-              type="text"
-              value={credential}
-              onChange={(e) => setCredential(e.target.value)}
-              required
-              placeholder='Username or Email'
-            />
+    <div className='login-modal-container'>
+      <div className='login-card-container'>
+        <h1 className='login-text'>Log In</h1>
+        <form onSubmit={handleSubmit}>
+          <label>
+            <div>
+              <input className='input'
+                type="text"
+                value={credential}
+                onChange={(e) => setCredential(e.target.value)}
+                required
+                placeholder='Username or Email'
+              />
+            </div>
+          </label>
+          <label className='password-input'>
+            <div>
+              <input className='input'
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder='Password'
+              />
+            </div>
+          </label>
+          {errors.credential && <p>{errors.credential}</p>}
+          <div className='login-page-button'>
+            <button className="login-modal-button" type="submit">Log In</button>
           </div>
-        </label>
-        <label className='password-input'>
-          {/* <div className='password-text'>
-            Password
-          </div> */}
-          <div>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder='Password'
-            />
-          </div>
-        </label>
-        {errors.credential && <p>{errors.credential}</p>}
-        <div className='login-page-button'>
-          <button className="login-modal-button" type="submit">Log In</button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
