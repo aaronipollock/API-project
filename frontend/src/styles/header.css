@@ -1,7 +1,10 @@
 .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: #fff;
     border-bottom: 1px solid #ddd;
-    padding: 10px 20px;
+    padding: 0px 24px;
     position: sticky;
     top: 0;
     width: 100%;
@@ -9,9 +12,20 @@
   }
 
   .header .logo {
+    font-family: 'Times New Roman', sans-serif;
     font-size: 24px;
     font-weight: bold;
-    color: #333;
+    color: #CA010C;
+    height: 34px;
+    text-decoration: none;
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
   }
 
   .header .logo a {
@@ -25,9 +39,19 @@
   }
 
   .header .auth-buttons button,
-  .header .auth-buttons a {
-    background: #007bff;
+  .header .signup-button a {
+    background:	#0d9263;
     color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .header .login-button a {
+    background:	#fff;
+    color: #333;
+    font-weight: bold;
     border: none;
     padding: 8px 12px;
     border-radius: 4px;

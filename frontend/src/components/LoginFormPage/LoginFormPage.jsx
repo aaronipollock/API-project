@@ -25,31 +25,43 @@ function LoginFormPage() {
   };
 
   return (
-    <>
-      <h1>Log In</h1>
+    <div className='login-page'>
+      <h1 className='login-text'>Log In</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          Username or Email
-          <input
-            type="text"
-            value={credential}
-            onChange={(e) => setCredential(e.target.value)}
-            required
-          />
+          {/* <div>
+            Username or Email
+          </div> */}
+          <div>
+            <input
+              type="text"
+              value={credential}
+              onChange={(e) => setCredential(e.target.value)}
+              required
+              placeholder='Username or Email'
+            />
+          </div>
         </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        <label className='password-input'>
+          {/* <div className='password-text'>
+            Password
+          </div> */}
+          <div>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder='Password'
+            />
+          </div>
         </label>
         {errors.credential && <p>{errors.credential}</p>}
-        <button type="submit">Log In</button>
+        <div className='login-page-button'>
+          <button className="login-modal-button" type="submit">Log In</button>
+        </div>
       </form>
-    </>
+    </div>
   );
 }
 

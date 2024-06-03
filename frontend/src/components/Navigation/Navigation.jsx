@@ -36,7 +36,7 @@ function Navigation({ isLoaded }) {
   return (
     <ul>
       <li>
-        <NavLink to="/">Home</NavLink>
+        <NavLink to="/">LinkUp</NavLink>
       </li>
       {isLoaded && sessionLinks}
     </ul>

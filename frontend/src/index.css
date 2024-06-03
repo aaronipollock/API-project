@@ -45,11 +45,3 @@ a:hover {
     position: absolute;
     width: 1px;
 }
-
-h1 {
-    font-family: 'Times New Roman', sans-serif; /* Change this to your desired font */
-    color: #CA010C;
-    font-size: 2rem;
-    text-align: left;
-    margin-top: 20px;
-  }
