@@ -7,6 +7,7 @@ import Navigation from './components/Navigation/Navigation-bonus';
 import * as sessionActions from './store/session';
 import { Modal } from './context/Modal';
 import './index.css'
+import LandingPage from './components/LandingPage/LandingPage';
 
 
 function Layout() {
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <h1>H1</h1>
+        element: <LandingPage />
       },
       {
         path: 'login',
