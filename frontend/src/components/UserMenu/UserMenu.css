@@ -1,0 +1,33 @@
+.user-menu-container {
+    position: relative;
+    display: inline-block;
+}
+
+.user-menu-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.user-menu-dropdown {
+    display: block;
+    position: absolute;
+    background-color: white;
+    padding: 10px;
+}
+
+.user-menu-dropdown {
+    padding: 5px 0;
+}
+
+.logout-button {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}

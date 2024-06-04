@@ -7,6 +7,7 @@ import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import { useModal } from '../../context/Modal';
 import * as sessionActions from '../../store/session';
+import UserMenu from '../UserMenu/UserMenu';
 
 function Navigation() {
   const sessionUser = useSelector(state => state.session.user);
@@ -24,9 +25,8 @@ function Navigation() {
         <NavLink to="/" className="logo">LinkUp</NavLink>
         <nav className="nav">
           {sessionUser ? (
-            <div className="auth-buttons">
-              <span>Hello, {sessionUser.firstName}</span>
-              <button onClick={handleLogout}>Log Out</button>
+            <div className="auth-links">
+              <UserMenu />
             </div>
           ) : (
             <>
