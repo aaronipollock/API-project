@@ -9,7 +9,7 @@ const LandingPage = () => {
                     <p>Whatever your interest, from hiking and reading to networking and skill sharing, there are thousands of people who share it on Meetup. Events are happening every day—sign up to join the fun.</p>
                 </div>
                 <div className="infographic">
-                    <img src="" />
+                    <img src="https://aarons-app-academy-api-project.s3.us-west-1.amazonaws.com/Untitled+design.png" />
                 </div>
             </section>
             <section className="section section-2">
