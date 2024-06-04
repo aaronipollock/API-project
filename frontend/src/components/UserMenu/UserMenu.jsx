@@ -41,6 +41,7 @@ function UserMenu() {
                         <div className="user-menu-dropdown">
                             <p>Hello, {sessionUser.firstName}</p>
                             <p>{sessionUser.email}</p>
+                            <NavLink href="/groups" className="menu-link">View groups</NavLink>
                             <button onClick={handleLogout} className="logout-button">Log Out</button>
                         </div>
                     )}
