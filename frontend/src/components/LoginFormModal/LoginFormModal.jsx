@@ -3,6 +3,8 @@ import * as sessionActions from '../../store/session';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import './LoginFormModal.css';
+import { Link } from 'react-router-dom';
+
 
 function LoginFormModal() {
   const dispatch = useDispatch();
@@ -20,6 +22,25 @@ function LoginFormModal() {
     setPassword(e.target.value);
   }
 
+  const handleDemoLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const demoCredential = 'demo@user.io';
+      const demoPassword = 'password';
+
+      const response = await dispatch(sessionActions.login({
+        credential: demoCredential,
+        password: demoPassword
+      }));
+
+      if (response.error) {
+        setErrors({ credential: "The provided credentials were invalid"})
+      }
+    } catch (error) {
+      console.error('Error logging in as demo user:', error);
+      setErrors({ credential: "The provided credentials were invalid"})
+    }
+  }
 
   useEffect(() => {
     const validateForm = () => {
@@ -67,6 +88,9 @@ function LoginFormModal() {
         </label>
         {errors.credential && <p>{errors.credential}</p>}
         <button type="submit" disabled={!isFormValid} id="loginButton">Log In</button>
+        <div>
+            <Link to="#" className='demo-user-link' onClick={handleDemoLogin}>Log in as Demo User</Link>
+          </div>
       </form>
     </>
   );
