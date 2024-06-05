@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as sessionActions from '../../store/session';
-import './UserMenu.css'
+import './UserMenu.css';
 
 function UserMenu() {
     const dispatch = useDispatch();
     const sessionUser = useSelector((state) => state.session.user);
-    const [showMenu, setShowMenu] = useState(false)
+    const [showMenu, setShowMenu] = useState(false);
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
-    }
+    };
 
     const handleLogout = async () => {
         await dispatch(sessionActions.logout());
@@ -41,14 +41,14 @@ function UserMenu() {
                         <div className="user-menu-dropdown">
                             <p>Hello, {sessionUser.firstName}</p>
                             <p>{sessionUser.email}</p>
-                            <NavLink href="/groups" className="menu-link">View groups</NavLink>
+                            <a href="/groups" className="menu-link">View groups</a>
                             <button onClick={handleLogout} className="logout-button">Log Out</button>
                         </div>
                     )}
                 </>
             )}
         </div>
-    )
+    );
 }
 
 export default UserMenu;

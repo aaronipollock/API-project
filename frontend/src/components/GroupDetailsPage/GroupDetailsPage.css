@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.group-details-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.breadcrumb {
+    margin-bottom: 20px;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: blue;
+}
+
+.group-details {
+    display: flex,
+    margin-bottom: 20px;
+}
+
+.group-image {
+    width: 150px;
+    height: 150px;
+    margin-right: 20px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+}
+
+.group-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.group-name {
+    font-size: 24px;
+    margin: 0 0 10px 0;
+}
+
+.group-location,
+.group-events,
+.group-privacy,
+.group-organizer {
+    font-size: 16px;
+    margin: 5px 0;
+    color: #666;
+}
+
+.join-group-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.group-about {
+    margin: 20px 0;
+}
+
+.group-about h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.group-event-list h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.group-events-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.group-events-list li {
+    margin-bottom: 10px;
+}
+
+.group-events-list h3 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.group-events-list p {
+    margin: 5px 0 0 0;
+    color: #666;
+}
