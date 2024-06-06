@@ -8,6 +8,8 @@ import * as sessionActions from './store/session';
 import { Modal } from './context/Modal';
 import './index.css'
 import LandingPage from './components/LandingPage/LandingPage';
+import GroupListPage from './components/GroupListPage/GroupListPage';
+import GroupDetailsPage from './components/GroupDetailsPage/groupDetailsPage';
 
 
 function Layout() {
@@ -44,6 +46,14 @@ const router = createBrowserRouter([
       {
         path: 'signup',
         element: <SignupFormPage />
+      },
+      {
+        path: 'groups',
+        element: <GroupListPage />
+      },
+      {
+        path: 'groups/:groupId',
+        element: <GroupDetailsPage />
       }
     ]
   }
