@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
-import './GroupListPage.css';
+import { useDispatch, useSelector } from 'react-redux';
 import { setGroups, setError } from '../../store/groups';
 import { setEvents } from '../../store/events';
+import './GroupListPage.css';
 
 const GroupListPage = () => {
     const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const GroupListPage = () => {
                 }
                 const groupData = await groupRes.json();
                 const eventData = await eventRes.json();
-                // console.log('DATA: ', data);
+
                 dispatch(setGroups(groupData.Groups));
                 dispatch(setEvents(eventData.Events));
                 setLoading(false);
@@ -71,10 +71,10 @@ const GroupListPage = () => {
         <div className="group-list-page">
             <div className='content-container'>
                 <div className="header-container">
-                    <header className="header gray-header events-link">
+                    <header className="header events-header events-link">
                         Events
                     </header>
-                    <header className="header teal-header groups-link">
+                    <header className="header groups-header groups-link">
                         Groups
                     </header>
                 </div>

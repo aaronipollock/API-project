@@ -24,13 +24,13 @@
     cursor: pointer;
 }
 
-.gray-header {
+.events-header {
     color: gray;
     text-decoration: none;
     width: 100px;
 }
 
-.teal-header {
+.groups-header {
     color: teal;
     text-decoration: underline;
 }

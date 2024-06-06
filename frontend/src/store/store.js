@@ -9,7 +9,6 @@ const rootReducer = combineReducers({
   session: sessionReducer,
   groups: groupsReducer,
   events: eventsReducer,
-  users: usersReducer,
 });
 
 let enhancer;
