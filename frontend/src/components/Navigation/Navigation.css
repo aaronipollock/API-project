@@ -5,3 +5,25 @@
 .hidden {
   display: none;
 }
+
+.auth-links {
+  display: flex;
+  align-items: center;
+}
+
+.start-group-link {
+  margin-right: 20px;
+  text-decoration: underline;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.login-button, .signup-button {
+  margin-left: 15px;
+  font-size: 14px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}

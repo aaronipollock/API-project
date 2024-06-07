@@ -29,7 +29,7 @@ const LandingPage = () => {
                 </div>
                 <div className='column'>
                     <i className='icon'></i>
-                    <a href="/groups" className='link'>Start a group</a>
+                    <a href="/groups/new" className='link'>Start a group</a>
                     <p>Caption</p>
                 </div>
             </section>

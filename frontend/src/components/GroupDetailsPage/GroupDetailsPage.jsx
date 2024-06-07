@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setEvents } from '../../store/events';
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
 import { setError } from '../../store/groups';
 import './GroupDetailsPage.css';
@@ -8,11 +8,13 @@ import './GroupDetailsPage.css';
 function GroupDetailsPage() {
     const { groupId } = useParams();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const events = useSelector((state) => state.events.events || []);
     const [group, setGroup] = useState(null);
     const [loading, setLoading] = useState(true);
     const error = useSelector((state) => state.groups.error);
     const currentUser = useSelector((state) => state.session.user);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const isJSONResponse = (response) => {
         const contentType = response.headers.get("content-type");
@@ -62,6 +64,21 @@ function GroupDetailsPage() {
         fetchGroupDetails();
     }, [dispatch, groupId]);
 
+    const handleDeleteGroup = async () => {
+        const response = await csrfFetch(`/api/groups/${groupId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (response.ok) {
+            navigate('/groups');
+        } else {
+            alert('Failed to delete group');
+        }
+    };
+
     if (loading) {
         return <p>Loading...</p>
     }
@@ -94,6 +111,10 @@ function GroupDetailsPage() {
 
     const isOrganizer = currentUser && group && currentUser.id === group.organizerId;
 
+    const handleUpdateGroup = () => {
+        navigate(`/groups/${groupId}/edit`);
+    }
+
     return (
         <div className="group-details-page">
             <nav className="breadcrumb">
@@ -116,8 +137,8 @@ function GroupDetailsPage() {
                     {currentUser && isOrganizer && (
                         <div className="organizer-actions">
                             <button className="create-event-button" >Create event</button>
-                            <button className="update-button">Update</button>
-                            <button className="delete-button">Delete</button>
+                            <button className="update-button" onClick={handleUpdateGroup}>Update</button>
+                            <button className="delete-button" onClick={() => setShowDeleteModal(true)}>Delete</button>
                         </div>
                     )}
                 </div>
@@ -131,16 +152,16 @@ function GroupDetailsPage() {
                 <ul>
                     {sortedEvents.map(event => {
                         return (
-                            <li key={event.id} className="event-item" onClick={() => window.location.href = `/events/${event.id}`}>
+                            <li key={event.id} className="event-item" onClick={() => navigate(`/events/${event.id}`)}>
                                 <div className="event-details">
-                                <div className='event-thumbnail-container'>
-                                    <img src={event.previewImage || 'default_image_url_here'} className="event-thumbnail" />
-                                    <div className="event-info">
-                                        <p className="event-datetime">{new Date(event.startDate).toLocaleDateString()} {new Date(event.startDate).toLocaleTimeString()}</p>
-                                        <h3>{event.name}</h3>
-                                        <p className="event-location">{event.Venue?.city}, {event.Venue?.state}</p>
+                                    <div className='event-thumbnail-container'>
+                                        <img src={event.previewImage || 'default_image_url_here'} className="event-thumbnail" />
+                                        <div className="event-info">
+                                            <p className="event-datetime">{new Date(event.startDate).toLocaleDateString()} {new Date(event.startDate).toLocaleTimeString()}</p>
+                                            <h3>{event.name}</h3>
+                                            <p className="event-location">{event.Venue?.city}, {event.Venue?.state}</p>
+                                        </div>
                                     </div>
-                                </div>
                                     <p className="event-description">{event.description}</p>
                                 </div>
                             </li>
@@ -148,6 +169,16 @@ function GroupDetailsPage() {
                     })}
                 </ul>
             </div>
+            {showDeleteModal && (
+                <div className='modal'>
+                    <div className='modal-content'>
+                        <h2>Confirm Delete</h2>
+                        <p>Are you sure you want to remove this group?</p>
+                        <button className='delete-confirm-button' onClick={handleDeleteGroup}>Yes (Delete Group)</button>
+                        <button className='delete-cancel-button' onClick={() => setShowDeleteModal(false)}>No (Keep Group)</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

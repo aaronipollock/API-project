@@ -12,7 +12,7 @@ import UserMenu from '../UserMenu/UserMenu';
 function Navigation() {
   const sessionUser = useSelector(state => state.session.user);
   const { openModal } = useModal();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -26,6 +26,7 @@ function Navigation() {
         <nav className="nav">
           {sessionUser ? (
             <div className="auth-links">
+              <NavLink to="/groups/new" className="start-group-link">Start a new group</NavLink>
               <UserMenu />
             </div>
           ) : (

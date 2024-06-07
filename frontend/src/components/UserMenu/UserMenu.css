@@ -16,11 +16,8 @@
     display: block;
     position: absolute;
     background-color: white;
-    padding: 10px;
-}
-
-.user-menu-dropdown {
     padding: 5px 0;
+    font-size: 14px;
 }
 
 .logout-button {

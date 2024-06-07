@@ -10,7 +10,8 @@ import './index.css'
 import LandingPage from './components/LandingPage/LandingPage';
 import GroupListPage from './components/GroupListPage/GroupListPage';
 import GroupDetailsPage from './components/GroupDetailsPage/groupDetailsPage';
-import EventListPage from './components/EventListPage/EventListPage';
+import CreateGroupForm from './components/CreateGroupForm/CreateGroupForm';
+import UpdateGroupForm from './components/UpdateGroupForm/UpdateGroupForm';
 import EventDetailsPage from './components/EventDetailsPage/EventDetailsPage';
 
 function Layout() {
@@ -57,11 +58,15 @@ const router = createBrowserRouter([
         element: <GroupDetailsPage />
       },
       {
-        path: 'events',
-        element: <EventListPage />
+        path: 'groups/new',
+        element: <CreateGroupForm />
       },
       {
-        path: 'events/:eventId',
+        path: 'groups/:groupId/edit',
+        element: <UpdateGroupForm />
+      },
+      {
+        path: `events/:eventId`,
         element: <EventDetailsPage />
       }
     ]
