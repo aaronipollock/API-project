@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {useNavigate } from "react-router-dom"
 import * as sessionActions from '../../store/session';
 import './UserMenu.css';
 
 function UserMenu() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const sessionUser = useSelector((state) => state.session.user);
     const [showMenu, setShowMenu] = useState(false);
 
@@ -15,6 +17,7 @@ function UserMenu() {
     const handleLogout = async () => {
         await dispatch(sessionActions.logout());
         setShowMenu(false);
+        navigate('/');
     };
 
     useEffect(() => {

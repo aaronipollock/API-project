@@ -3,6 +3,7 @@ import { setEvents } from '../../store/events';
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
 import { setError } from '../../store/groups';
+import { csrfFetch } from '../../store/csrf'
 import './GroupDetailsPage.css';
 
 function GroupDetailsPage() {
