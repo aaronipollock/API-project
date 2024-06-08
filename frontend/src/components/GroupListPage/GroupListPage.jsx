@@ -16,7 +16,7 @@ const GroupListPage = () => {
         const fetchGroupsAndEvents = async () => {
             try {
                 const groupRes = await fetch('/api/groups');
-                const eventRes = await fetch('api/events');
+                const eventRes = await fetch('/api/events');
                 if (!groupRes.ok || !eventRes.ok) {
                     throw new Error("Network response was not ok")
                 }

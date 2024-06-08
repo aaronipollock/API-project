@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import * as sessionActions from '../../store/session';
 import './UserMenu.css';
 
@@ -44,7 +44,12 @@ function UserMenu() {
                         <div className="user-menu-dropdown">
                             <p>Hello, {sessionUser.firstName}</p>
                             <p>{sessionUser.email}</p>
-                            <a href="/groups" className="menu-link">View groups</a>
+                            <div>
+                                <a href="/groups" className="menu-link">View groups</a>
+                            </div>
+                            <div>
+                                <a href="/events" className="menu-link">View events</a>
+                            </div>
                             <button onClick={handleLogout} className="logout-button">Log Out</button>
                         </div>
                     )}
