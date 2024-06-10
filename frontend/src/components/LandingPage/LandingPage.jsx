@@ -1,6 +1,10 @@
-// import './LandingPage.css'
+// import './LandingPage.css';
+// import { useSelector } from 'react-redux';
+// import { FaUsers, FaCalendarAlt, FaPlusCircle } from 'react-icons/fa';
 
 // const LandingPage = () => {
+//     const sessionUser = useSelector((state) => state.session.user);
+
 //     return (
 //         <div className="landing-page">
 //             <section className="section section-1">
@@ -9,7 +13,7 @@
 //                     <p>Whatever your interest, from hiking and reading to networking and skill sharing, there are thousands of people who share it on Meetup. Events are happening every day—sign up to join the fun.</p>
 //                 </div>
 //                 <div className="infographic">
-//                     <img src="https://aarons-app-academy-api-project.s3.us-west-1.amazonaws.com/Untitled+design.png" />
+//                     <img src="https://images.pexels.com/photos/708440/pexels-photo-708440.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Infographic" />
 //                 </div>
 //             </section>
 //             <section className="section section-2">
@@ -18,18 +22,22 @@
 //             </section>
 //             <section className='section section-3'>
 //                 <div className='column'>
-//                     <i className='icon'></i>
+//                     <FaUsers className='icon' />
 //                     <a href="/groups" className='link'>See all groups</a>
 //                     <p>Caption</p>
 //                 </div>
 //                 <div className='column'>
-//                     <i className='icon'></i>
+//                     <FaCalendarAlt className='icon' />
 //                     <a href="/events" className='link'>Find an event</a>
 //                     <p>Caption</p>
 //                 </div>
 //                 <div className='column'>
-//                     <i className='icon'></i>
-//                     <a href="/groups/new" className='link'>Start a group</a>
+//                     <FaPlusCircle className='icon' />
+//                     {sessionUser ? (
+//                         <a href="/groups/new" className='link'>Start a group</a>
+//                     ) : (
+//                         <span className='link-disabled'>Start a Group</span>
+//                     )}
 //                     <p>Caption</p>
 //                 </div>
 //             </section>
@@ -56,7 +64,7 @@ const LandingPage = () => {
                     <p>Whatever your interest, from hiking and reading to networking and skill sharing, there are thousands of people who share it on Meetup. Events are happening every day—sign up to join the fun.</p>
                 </div>
                 <div className="infographic">
-                    <img src="https://aarons-app-academy-api-project.s3.us-west-1.amazonaws.com/Untitled+design.png" alt="Infographic" />
+                    <img src="https://images.pexels.com/photos/708440/pexels-photo-708440.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Infographic" />
                 </div>
             </section>
             <section className="section section-2">
@@ -79,7 +87,7 @@ const LandingPage = () => {
                     {sessionUser ? (
                         <a href="/groups/new" className='link'>Start a group</a>
                     ) : (
-                        <span className='link-disabled'>Start a Group</span>
+                        <span className='link disabled'>Start a Group</span>
                     )}
                     <p>Caption</p>
                 </div>
@@ -92,4 +100,3 @@ const LandingPage = () => {
 }
 
 export default LandingPage;
-

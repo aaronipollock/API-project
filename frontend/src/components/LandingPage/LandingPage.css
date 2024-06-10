@@ -35,6 +35,7 @@
 .section-3 {
     display: flex;
     justify-content: space-around;
+    width: 100%;
 }
 
 .section-3 .column {
@@ -43,9 +44,16 @@
     padding: 10px;
 }
 
+.section-3 .icon {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: teal;
+}
+
 .section-3 .link {
     text-decoration: none;
     color: teal;
+    display: block;
 }
 
 .section-3 .link:hover {
@@ -56,7 +64,6 @@
 .section-3 .link.disabled {
     color: lightgrey;
     pointer-events: none;
-    text-decoration: none;;
 }
 
 .section-4 {
@@ -98,6 +105,11 @@
     flex: 1;
     display: flex;
     justify-content: center;
+}
+
+.section-1 .infographic img {
+    max-width: 80%; /* Adjust this value to make the image smaller or larger */
+    height: auto;
 }
 
 .section-2 {
