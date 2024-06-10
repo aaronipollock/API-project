@@ -16,6 +16,7 @@
   text-decoration: underline;
   font-size: 14px;
   font-weight: bold;
+  color: teal;
 }
 
 .login-button, .signup-button {

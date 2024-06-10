@@ -16,7 +16,20 @@ const EventListPage = () => {
                     const eventData = await eventRes.json();
                     const upcomingEvents = eventData.Events.filter(event => new Date(event.startDate) >= new Date());
                     const pastEvents = eventData.Events.filter(event => new Date(event.startDate) < new Date());
-                    setEvents([...upcomingEvents, ...pastEvents]);
+
+                    const eventsWithDescriptions = await Promise.all([...upcomingEvents, ...pastEvents].map(async (event) => {
+                        const eventDetailRes = await fetch(`/api/events/${event.id}`);
+                        if (eventDetailRes.ok) {
+                            const eventDetailData = await eventDetailRes.json();
+                            return {
+                                ...event,
+                                description: eventDetailData.description,
+                            };
+                        }
+                        return event;
+                    }));
+
+                    setEvents(eventsWithDescriptions);
                     setLoading(false);
                 } else {
                     throw new Error('Failed to fetch events');
@@ -40,27 +53,35 @@ const EventListPage = () => {
 
     return (
         <div className="event-list-page">
-            <h1 className="teal-header">Events</h1>
-            <h2 className="gray-header">Groups</h2>
-            <caption>Events in LinkUp</caption>
-            <ul className="event-list">
-                {events.map(event => (
-                    <li key={event.id} className="event-item" onClick={() => navigate(`/events/${event.id}`)}>
-                        <div className="event-details">
-                            <div className="event-thumbnail-container">
-                                <img src={event.previewImage || 'default_image_url_here'} className="event-thumbnail" />
-                                <div className="event-info">
-                                    <p className="event-datetime">{new Date(event.startDate).toLocaleDateString()} &middot; {new Date(event.startDate).toLocaleTimeString()}</p>
-                                    <h3>{event.name}</h3>
-                                    <p className="event-location">{event.Venue?.city}, {event.Venue?.state}</p>
+            <div className="content-container">
+                <div className="header-container">
+                    <h1 className="teal-header">Events</h1>
+                    <Link to="/groups" className="gray-header-link">
+                        <h2 className="gray-header">Groups</h2>
+                    </Link>
+                </div>
+                <p className="caption">Events in Meetup</p>
+                <ul className="event-list">
+                    {events.map((event, index) => (
+                        <div key={event.id}>
+                            <li className="event-item" onClick={() => navigate(`/events/${event.id}`)}>
+                                <div className="event-details">
+                                    <div className="event-thumbnail-container">
+                                        <img src={event.previewImage || 'default_image_url_here'} className="event-thumbnail" />
+                                        <div className="event-info">
+                                            <p className="event-datetime">{new Date(event.startDate).toLocaleDateString()} &middot; {new Date(event.startDate).toLocaleTimeString()}</p>
+                                            <h3>{event.name}</h3>
+                                            <p className="event-location">{event.Venue?.city}, {event.Venue?.state}</p>
+                                        </div>
+                                    </div>
+                                    <p className="event-description">{event.description}</p>
                                 </div>
-                            </div>
-                            <p clasName="event-description">{event.description}</p>
+                            </li>
+                            {index < events.length - 1 && <hr />}
                         </div>
-                        <hr />
-                    </li>
-                ))}
-            </ul>
+                    ))}
+                </ul>
+            </div>
         </div>
     )
 }

@@ -1,4 +1,4 @@
-body {
+/* body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -16,7 +16,7 @@ body {
 
 .breadcrumb a {
     text-decoration: none;
-    color: blue;
+    color: teal;
 }
 
 .group-details {
@@ -203,4 +203,236 @@ body {
     border: none;
     padding: 10px 20px;
     cursor: pointer;
+}
+
+.dot {
+    margin: 0 5px;
+}
+
+.button {
+    background-color: darkgray;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+} */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.group-details-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.breadcrumb {
+    margin-bottom: 20px;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: teal;
+}
+
+.group-details {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.group-image {
+    width: 150px;
+    height: 150px;
+    margin-right: 20px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+}
+
+.group-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Adjust spacing */
+}
+
+.group-name {
+    font-size: 24px;
+    margin: 0 0 10px 0;
+}
+
+.group-location,
+.group-events,
+.group-privacy,
+.group-organizer {
+    font-size: 16px;
+    margin: 5px 0;
+    color: #666;
+}
+
+.join-group-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.group-about {
+    margin: 20px 0;
+}
+
+.group-about h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.group-event-list h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.group-events-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.group-events-list li {
+    margin-bottom: 10px;
+}
+
+.group-events-list h3 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.group-events-list p {
+    margin: 5px 0 0 0;
+    color: #666;
+}
+
+.button {
+    background-color: darkgray;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background-color: #a9a9a9;
+}
+
+.delete-button {
+    background-color: darkgray;
+}
+
+/* .delete-button:hover {
+    background-color: #cc0000;
+} */
+
+.event-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.event-item:hover {
+    background-color: #f0f0f0;
+}
+
+.event-thumbnail-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.event-thumbnail {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.event-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.event-description {
+    font-size: 14px;
+    color: grey;
+    margin-bottom: 5px;
+}
+
+.event-datetime {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.event-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.event-location {
+    font-size: 14px;
+    color: gray;
+}
+
+.organizer-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+.delete-confirm-button {
+    background-color: darkgray;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.delete-cancel-button {
+    background-color: darkgrey;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.dot {
+    margin: 0 5px;
 }

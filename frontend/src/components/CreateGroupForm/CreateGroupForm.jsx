@@ -23,7 +23,7 @@ function CreateGroupForm() {
         if (description.length < 30) newErrors.description = 'Description needs 50 or more characters';
         if (!type) newErrors.type = 'Group type is required';
         if (!privacy) newErrors.privacy = 'Privacy is required';
-        // if (!imageUrl) newErrors.imageUrl = 'Image URL is required';
+        if (!imageUrl) newErrors.imageUrl = 'Image URL is required';
         return newErrors;
     }
 
@@ -43,7 +43,6 @@ function CreateGroupForm() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(groupData)
         });

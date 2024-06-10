@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { setGroups, setError } from '../../store/groups';
 import { setEvents } from '../../store/events';
 import './GroupListPage.css';
@@ -71,9 +72,9 @@ const GroupListPage = () => {
         <div className="group-list-page">
             <div className='content-container'>
                 <div className="header-container">
-                    <header className="header events-header events-link">
+                    <Link to="/events" className="header events-header events-link">
                         Events
-                    </header>
+                    </Link>
                     <header className="header groups-header groups-link">
                         Groups
                     </header>

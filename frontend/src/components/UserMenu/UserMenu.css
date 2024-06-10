@@ -4,7 +4,7 @@
 }
 
 .user-menu-button {
-    background-color: #007bff;
+    background-color: teal;
     color: white;
     border: none;
     padding: 10px;
@@ -27,4 +27,8 @@
     cursor: pointer;
     border-radius: 5px;
     width: 100%;
+}
+
+.menu-link {
+    color: teal;
 }

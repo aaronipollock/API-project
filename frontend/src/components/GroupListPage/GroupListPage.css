@@ -10,6 +10,7 @@
 .content-container {
     width: 80%;
     max-width: 1200px;
+    margin: auto;
 }
 
 .header-container {
@@ -40,7 +41,6 @@
     margin: 20px 0 10px 20px;
     color: gray;
 }
-
 
 .group-list {
     list-style: none;
@@ -85,12 +85,13 @@
     color: #666;
 }
 
-.group-meta{
+.group-meta {
     display: flex;
     align-items: center;
     font-size: 14px;
     color: #666;
 }
+
 .group-events,
 .group-privacy {
     font-size: 14px;
