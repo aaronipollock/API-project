@@ -494,14 +494,14 @@ router.post('/:groupId/events', requireAuth, async (req, res, next) => {
 
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
 
-    const venue = await Venue.findByPk(venueId)
-    if (!venue) {
-        return res.status(404).json({
-            errors: {
-                message: "Venue couldn't be found"
-            }
-        })
-    }
+    // const venue = await Venue.findByPk(venueId)
+    // if (!venue) {
+    //     return res.status(404).json({
+    //         errors: {
+    //             message: "Venue couldn't be found"
+    //         }
+    //     })
+    // }
 
     const isCohost = await Membership.findAll({
         where: {
