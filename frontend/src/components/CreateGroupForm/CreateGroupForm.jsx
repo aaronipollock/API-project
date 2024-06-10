@@ -34,6 +34,7 @@ function CreateGroupForm() {
         }
 
         const [city, state] = location.split(', ').map(part => part.trim());
+
         const groupData = { name, about: description, type, private: privacy === 'private', city, state, imageUrl };
 
         const response = await csrfFetch('/api/groups', {
