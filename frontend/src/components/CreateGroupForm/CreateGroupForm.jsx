@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-// import { useSelector } from 'react-redux'
 import './CreateGroupForm.css'
 import { csrfFetch } from '../../store/csrf';
 
@@ -14,7 +13,6 @@ function CreateGroupForm() {
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
-    // const token = useSelector(state => state.session.token);
 
     const validateForm = () => {
         const newErrors = {};

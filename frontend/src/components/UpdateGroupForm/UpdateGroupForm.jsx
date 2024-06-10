@@ -1,22 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 import './UpdateGroupForm.css';
 import { csrfFetch } from '../../store/csrf';
 
 function UpdateGroupForm() {
     const { groupId } = useParams();
     const navigate = useNavigate();
-    const currentUser = useSelector((state) => state.session.user)
+    const currentUser = useSelector((state) => state.session.user);
 
-    const [location, setLocation] = useState('');
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');
     const [privacy, setPrivacy] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [errors, setErrors] = useState({});
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchGroupDetails = async () => {
@@ -29,11 +30,12 @@ function UpdateGroupForm() {
                     return;
                 }
 
-                setLocation(`${groupData.city}, ${groupData.state}`);
+                setCity(groupData.city);
+                setState(groupData.state);
                 setName(groupData.name);
                 setDescription(groupData.about);
                 setType(groupData.type);
-                setPrivacy(groupData.private ? 'private' : 'public');
+                setPrivacy(groupData.private ? 'Private' : 'Public');
                 setImageUrl(groupData.imageUrl || '');
                 setLoading(false);
             } else {
@@ -47,7 +49,7 @@ function UpdateGroupForm() {
 
     const validateForm = () => {
         const newErrors = {};
-        if (!location) newErrors.location = 'Location is required';
+        if (!city || !state) newErrors.location = 'Location is required'; // Updated
         if (!name) newErrors.name = 'Name is required';
         if (description.length < 50) newErrors.description = 'Description needs 50 or more characters';
         if (!type) newErrors.type = 'Group type is required';
@@ -63,7 +65,7 @@ function UpdateGroupForm() {
             return;
         }
 
-        const groupData = { location, name, about: description, type, privacy, imageUrl };
+        const groupData = { city, state, name, about: description, type, privacy, imageUrl }; // Updated
         const response = await csrfFetch(`/api/groups/${groupId}`, {
             method: 'PUT',
             headers: {
@@ -79,8 +81,8 @@ function UpdateGroupForm() {
         }
     };
 
-    if(loading) {
-        return <p>Loading...</p>
+    if (loading) {
+        return <p>Loading...</p>;
     }
 
     return (
@@ -93,9 +95,15 @@ function UpdateGroupForm() {
                     <p>LinkUp groups meet locally, in person and online. We&apos;ll connect you with people in your area, and more can join you online.</p>
                     <input
                         type="text"
-                        placeholder="City, STATE"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
+                        placeholder="City"
+                        value={city} // Updated
+                        onChange={(e) => setCity(e.target.value)} // Updated
+                    />
+                    <input
+                        type="text"
+                        placeholder="State"
+                        value={state} // Updated
+                        onChange={(e) => setState(e.target.value)} // Updated
                     />
                     {errors.location && <p className="error-message">{errors.location}</p>}
                 </section>

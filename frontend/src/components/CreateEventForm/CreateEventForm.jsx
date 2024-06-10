@@ -55,7 +55,7 @@ function CreateEventForm() {
         if (!price) newErrors.price = 'Price is required';
         if (!startDate) newErrors.startDate = 'Event start is required';
         if (!endDate) newErrors.endDate = 'Event end is required';
-        // if (!imageUrl) newErrors.imageUrl = 'Image URL is required';
+        if (!imageUrl) newErrors.imageUrl = 'Image URL is required';
         if (description.length < 30) newErrors.description = 'Description needs 30 or more characters';
         return newErrors;
     };
