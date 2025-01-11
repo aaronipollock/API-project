@@ -79,7 +79,7 @@ const GroupListPage = () => {
                         Groups
                     </header>
                 </div>
-                <p className="caption">Groups in LinkUp</p>
+                <p className="caption">Groups in SyncUp</p>
                 {content}
             </div>
         </div>

@@ -20,8 +20,24 @@
 }
 
 .login-button, .signup-button {
-  margin-left: 15px;
-  font-size: 14px;
+    font-size: 14px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+}
+
+.signup-button {
+    background-color: teal;
+    color: white;
+}
+
+.login-button {
+    background-color: white;
+}
+
+.login-button:hover {
+    color: teal;
 }
 
 .nav {

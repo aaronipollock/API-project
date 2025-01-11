@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom';
-import LoginFormPage from './components/LoginFormPage';
+import LoginFormModal from './components/LoginFormModal';
 import SignupFormPage from './components/SignupFormPage';
 import Navigation from './components/Navigation/Navigation-bonus';
 import * as sessionActions from './store/session';
@@ -45,7 +45,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'login',
-        element: <LoginFormPage />
+        element: <LoginFormModal />
       },
       {
         path: 'signup',
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'groups/new',
-        element: <CreateGroupForm />  
+        element: <CreateGroupForm />
       },
       {
         path: 'groups/:groupId/edit',

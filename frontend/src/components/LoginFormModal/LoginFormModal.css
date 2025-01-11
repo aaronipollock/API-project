@@ -50,3 +50,7 @@ button:disabled {
     flex-direction: column;
     margin-top: 10px;
 }
+
+.login-button {
+    background-color: blue;
+}

@@ -92,7 +92,7 @@ function UpdateGroupForm() {
             <form onSubmit={handleSubmit}>
                 <section className="form-section">
                     <h2>Set your group&apos;s location.</h2>
-                    <p>LinkUp groups meet locally, in person and online. We&apos;ll connect you with people in your area, and more can join you online.</p>
+                    <p>SyncUp groups meet locally, in person and online. We&apos;ll connect you with people in your area, and more can join you online.</p>
                     <input
                         type="text"
                         placeholder="City"

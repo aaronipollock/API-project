@@ -39,15 +39,17 @@
   }
 
   .header .auth-buttons button,
-  .header .signup-button a {
-    background:	#0d9263;
-    color: #fff;
+  .header .signup-button,
+  .signup-button {
+    background-color: teal;
+    color: white;
     border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
+    padding: 10px 20px;
     cursor: pointer;
+    border-radius: 5px;
     text-decoration: none;
   }
+
   .header .login-button a {
     background:	#fff;
     color: #333;
@@ -62,4 +64,20 @@
   .header .auth-buttons button:hover,
   .header .auth-buttons a:hover {
     background: #0056b3;
+  }
+
+  .header .signup-button {
+    background-color: teal;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    text-decoration: none;
+    margin-left: 10px;
+  }
+
+  .header .signup-button:hover {
+    background-color: #008080;
   }
