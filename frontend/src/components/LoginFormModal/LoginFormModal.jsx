@@ -70,30 +70,48 @@ function LoginFormModal() {
       <div className="login-card-container">
         <h1>Log In</h1>
         <form id="loginForm" onSubmit={handleSubmit}>
-          <label>
-            Username or Email
-            <input
-              id='credential'
-              type="text"
-              value={credential}
-              onChange={handleCredentialChange}
-              required
-            />
-          </label>
-          <label>
-            Password
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              required
-            />
-          </label>
-          {errors.credential && <p>{errors.credential}</p>}
-          <button type="submit" disabled={!isFormValid} className="login-button-modal">Log In</button>
-          <div>
-            <button type="button" className='demo-user-link' onClick={handleDemoLogin}>
+          <div className="form-group">
+            <label>
+              Username or Email
+              <input
+                id='credential'
+                type="text"
+                value={credential}
+                onChange={handleCredentialChange}
+                required
+                className={errors.credential ? 'input-error' : ''}
+              />
+            </label>
+          </div>
+          <div className="form-group">
+            <label>
+              Password
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
+                required
+                className={errors.credential ? 'input-error' : ''}
+              />
+            </label>
+          </div>
+          <div className="error-container">
+            {errors.credential && <p className="error-message">{errors.credential}</p>}
+          </div>
+          <button
+            type="submit"
+            disabled={!isFormValid}
+            className="login-button-modal"
+          >
+            Log In
+          </button>
+          <div className="demo-button-container">
+            <button
+              type="button"
+              className='demo-user-link'
+              onClick={handleDemoLogin}
+            >
               Log in as Demo User
             </button>
           </div>

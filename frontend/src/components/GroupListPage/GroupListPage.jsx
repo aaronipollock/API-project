@@ -72,12 +72,10 @@ const GroupListPage = () => {
         <div className="group-list-page">
             <div className='content-container'>
                 <div className="header-container">
-                    <Link to="/events" className="header events-header events-link">
-                        Events
+                    <Link to="/events" className="gray-header-link">
+                        <h2 className="gray-header">Events</h2>
                     </Link>
-                    <header className="header groups-header groups-link">
-                        Groups
-                    </header>
+                    <h1 className="teal-header">Groups</h1>
                 </div>
                 <p className="caption">Groups in SyncUp</p>
                 {content}

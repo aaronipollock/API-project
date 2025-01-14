@@ -1,44 +1,89 @@
 .login-modal-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border-radius: 15px;
-    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
 }
 
 .login-card-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 24px;
+    width: 400px;
+    min-height: 380px; /* Set a minimum height to prevent layout shifts */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .login-card-container h1 {
+    margin: 0 0 24px;
     text-align: center;
-    margin-bottom: 10px;
+    color: #2e2e2e;
 }
 
-.login-card-container form {
+#loginForm {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 16px;
 }
 
-.login-card-container input {
-    width: 100%;
-    padding: 8px;
-    border-radius: 4px;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
+    color: #2e2e2e;
+}
+
+.form-group input {
+    padding: 8px 12px;
     border: 1px solid #ccc;
-    margin-top: 5px;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #0066cc;
+}
+
+.input-error {
+    border-color: #ff3333 !important;
+}
+
+.error-container {
+    min-height: 20px; /* Reserve space for error message */
+    margin: 4px 0;
+}
+
+.error-message {
+    color: #ff3333;
+    font-size: 14px;
+    margin: 0;
+    animation: fadeIn 0.2s ease;
 }
 
 .login-button-modal {
-    background-color: teal;
+    padding: 12px;
+    background-color: #0066cc;
     color: white;
-    padding: 10px;
     border: none;
     border-radius: 4px;
+    font-size: 16px;
     cursor: pointer;
-    margin-top: 10px;
+    transition: background-color 0.2s ease;
 }
 
 .login-button-modal:disabled {
@@ -46,24 +91,37 @@
     cursor: not-allowed;
 }
 
+.login-button-modal:not(:disabled):hover {
+    background-color: #0052a3;
+}
+
+.demo-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
 .demo-user-link {
     background: none;
     border: none;
-    color: teal;
+    color: #0066cc;
     text-decoration: underline;
     cursor: pointer;
-    padding: 5px;
-    width: 100%;
-    text-align: center;
+    font-size: 14px;
+    transition: color 0.2s ease;
 }
 
 .demo-user-link:hover {
-    color: #004d4d;
+    color: #0052a3;
 }
 
-/* Error message styling */
-p {
-    color: red;
-    font-size: 0.9em;
-    margin: 5px 0;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

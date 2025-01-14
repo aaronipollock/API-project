@@ -52,44 +52,46 @@
 }
 
 .event-item {
+    display: flex;
+    align-items: flex-start;
     cursor: pointer;
     padding: 20px 0;
+    border-bottom: 1px solid lightgray;
 }
 
-.event-details {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.event-thumbnail-container {
-    display: flex;
-    align-items: center;
+.event-item:last-child {
+    border-bottom: none;
 }
 
 .event-thumbnail {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
     margin-right: 20px;
+    border-radius: 4px;
 }
 
 .event-info {
     flex: 1;
 }
 
+.event-name {
+    font-size: 20px;
+    margin: 0 0 5px 0;
+}
+
 .event-datetime,
 .event-location {
     margin: 5px 0;
+    color: #666;
 }
 
 .event-description {
-    margin-top: 10px;
+    margin: 10px 0;
     font-size: 14px;
     color: grey;
 }
 
-hr {
-    border: none;
-    border-top: 1px solid lightgray;
+.event-item:hover {
+    background-color: #f9f9f9;
 }

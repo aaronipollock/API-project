@@ -63,22 +63,15 @@ const EventListPage = () => {
                 <p className="caption">Events in Meetup</p>
                 <ul className="event-list">
                     {events.map((event, index) => (
-                        <div key={event.id}>
-                            <li className="event-item" onClick={() => navigate(`/events/${event.id}`)}>
-                                <div className="event-details">
-                                    <div className="event-thumbnail-container">
-                                        <img src={event.previewImage || 'default_image_url_here'} className="event-thumbnail" />
-                                        <div className="event-info">
-                                            <p className="event-datetime">{new Date(event.startDate).toLocaleDateString()} &middot; {new Date(event.startDate).toLocaleTimeString()}</p>
-                                            <h3>{event.name}</h3>
-                                            <p className="event-location">{event.Venue?.city}, {event.Venue?.state}</p>
-                                        </div>
-                                    </div>
-                                    <p className="event-description">{event.description}</p>
-                                </div>
-                            </li>
-                            {index < events.length - 1 && <hr />}
-                        </div>
+                        <li key={event.id} className="event-item" onClick={() => navigate(`/events/${event.id}`)}>
+                            <img src={event.previewImage || 'default_image_url_here'} className="event-thumbnail" />
+                            <div className="event-info">
+                                <p className="event-datetime">{new Date(event.startDate).toLocaleDateString()} · {new Date(event.startDate).toLocaleTimeString()}</p>
+                                <h3 className="event-name">{event.name}</h3>
+                                <p className="event-location">{event.Venue?.city}, {event.Venue?.state}</p>
+                                <p className="event-description">{event.description}</p>
+                            </div>
+                        </li>
                     ))}
                 </ul>
             </div>
