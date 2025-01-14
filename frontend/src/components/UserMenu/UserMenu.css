@@ -7,17 +7,23 @@
     background-color: teal;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
+    font-size: 14px;
 }
 
 .user-menu-dropdown {
     display: block;
     position: absolute;
+    right: 0;
     background-color: white;
-    padding: 5px 0;
+    padding: 10px;
     font-size: 14px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    min-width: 200px;
+    margin-top: 5px;
 }
 
 .logout-button {
@@ -27,8 +33,17 @@
     cursor: pointer;
     border-radius: 5px;
     width: 100%;
+    border: none;
+    font-size: 14px;
 }
 
 .menu-link {
     color: teal;
+    text-decoration: none;
+    display: block;
+    padding: 5px 0;
+}
+
+.menu-link:hover {
+    text-decoration: underline;
 }

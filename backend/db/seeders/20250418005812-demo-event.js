@@ -12,25 +12,51 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await Event.bulkCreate([
       {
-        groupId: 1,
+        groupId: 1, // Cloud Computing
         venueId: 1,
-        name: 'Tennis Group First Meet and Greet',
-        description: 'First meet and greet event for the evening tennis on the water group! Join us online for happy times!',
+        name: 'AWS Certification Study Session',
+        description: 'Join us for an intensive study session focusing on AWS Solutions Architect certification. We\'ll cover key services, best practices, and work through practice questions.',
         type: 'Online',
-        capacity: 10,
-        price: 18.51,
-        startDate: '2024-11-19 20:00:00',
-        endDate: '2024-11-19 22:00:00'
+        capacity: 30,
+        price: 0.00,
+        startDate: '2024-11-19 18:00:00',
+        endDate: '2024-11-19 20:00:00'
       },
       {
-        groupId: 1,
-        venueId: 1,
-        name: 'Tennis Singles',
+        groupId: 2, // AI/ML
+        venueId: 2,
+        name: 'Machine Learning Workshop: Neural Networks',
+        description: 'Hands-on workshop building neural networks from scratch. Bring your laptop and be ready to code! We\'ll use Python and TensorFlow.',
         type: 'In person',
-        startDate: '2024-11-20 20:00:00',
-        endDate: '2024-11-20 22:00:00'
+        capacity: 20,
+        price: 25.00,
+        startDate: '2024-11-20 14:00:00',
+        endDate: '2024-11-20 17:00:00'
+      },
+      {
+        groupId: 3, // Full Stack
+        venueId: 3,
+        name: 'Modern React Patterns & Practices',
+        description: 'Deep dive into React hooks, context, and state management. Live coding session followed by Q&A.',
+        type: 'Online',
+        capacity: 50,
+        price: 0.00,
+        startDate: '2024-11-21 19:00:00',
+        endDate: '2024-11-21 21:00:00'
+      },
+      {
+        groupId: 4, // Blockchain
+        venueId: 4,
+        name: 'Web3 Hackathon: Build a DApp',
+        description: 'Weekend hackathon! Build a decentralized application using Ethereum smart contracts. Prizes for top projects!',
+        type: 'In person',
+        capacity: 40,
+        price: 50.00,
+        startDate: '2024-11-23 09:00:00',
+        endDate: '2024-11-24 17:00:00'
       }
     ], { validate: true });
+    console.log('Seeding events:', events);
   },
 
   async down(queryInterface, Sequelize) {
@@ -38,8 +64,11 @@ module.exports = {
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
       name: { [Op.in]: [
-        'Tennis Group First Meet and Greet',
-        'Tennis Singles'] }
+        'AWS Certification Study Session',
+        'Machine Learning Workshop: Neural Networks',
+        'Modern React Patterns & Practices',
+        'Web3 Hackathon: Build a DApp'
+      ]}
     }, {});
   }
 };

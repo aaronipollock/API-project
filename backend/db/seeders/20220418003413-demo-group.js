@@ -12,31 +12,40 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await Group.bulkCreate([
       {
-        organizerId: 1,
-        name: 'Evening Tennis on the Water',
-        about: 'Enjoy rounds of tennis with a tight-nit group of people on the water facing the Brooklyn Bridge. Singles or doubles.',
-        type: 'In person',
-        private: true,
-        city: 'New York',
-        state: 'NY',
+        organizerId: 1, // Demo-lition
+        name: 'Cloud Computing Enthusiasts',
+        about: 'A community of cloud computing professionals and enthusiasts sharing knowledge about AWS, Azure, and Google Cloud. Join us for workshops, certification study groups, and networking events.',
+        type: 'Online',
+        private: false,
+        city: 'San Francisco',
+        state: 'CA',
       },
       {
-        organizerId: 2,
-        name: 'Real Estate Investor Networking',
-        about: 'Meet and mingle with other like minded real estate investors to learn, partner, share ideas and knowledge about the market.',
+        organizerId: 2, // TechLead
+        name: 'AI/ML Study Group',
+        about: 'Dive deep into artificial intelligence and machine learning concepts. From neural networks to deep learning, we explore cutting-edge AI technologies through hands-on projects.',
+        type: 'In person',
+        private: false,
+        city: 'Seattle',
+        state: 'WA',
+      },
+      {
+        organizerId: 3, // FullStackAlex
+        name: 'Full Stack Developer Network',
+        about: 'Connect with fellow developers to discuss modern web development practices, frameworks, and architectures. Regular code reviews, pair programming sessions, and tech talks.',
+        type: 'Online',
+        private: false,
+        city: 'Austin',
+        state: 'TX',
+      },
+      {
+        organizerId: 4, // CloudArchitect
+        name: 'Blockchain Innovators',
+        about: 'Exploring the future of Web3, smart contracts, and decentralized applications. Join us for hackathons, technical discussions, and hands-on blockchain development workshops.',
         type: 'In person',
         private: true,
         city: 'Miami',
         state: 'FL',
-      },
-      {
-        organizerId: 3,
-        name: 'Learn Teach Code LA',
-        about: "We're building a more diverse, tight-knit tech community across Los Angeles.",
-        type: 'Online',
-        private: false,
-        city: 'Los Angeles',
-        state: 'CA',
       }
     ], { validate: true });
   },
@@ -45,7 +54,7 @@ module.exports = {
     options.tableName = 'Groups';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      name: { [Op.in]: ['Evening Tennis on the Water', 'Real Estate Investor Networking', 'Learn Teach Code LA']}
+      name: { [Op.in]: ['Cloud Computing Enthusiasts', 'AI/ML Study Group', 'Full Stack Developer Network', 'Blockchain Innovators']}
     }, {});
   }
 };

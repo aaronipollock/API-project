@@ -3,8 +3,6 @@ import * as sessionActions from '../../store/session';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import './LoginFormModal.css';
-import { Link } from 'react-router-dom';
-
 
 function LoginFormModal() {
   const dispatch = useDispatch();
@@ -42,6 +40,8 @@ function LoginFormModal() {
 
       if (response.error) {
         setErrors({ credential: "The provided credentials were invalid" })
+      } else {
+        closeModal();
       }
     } catch (error) {
       console.error('Error logging in as demo user:', error);
@@ -52,7 +52,7 @@ function LoginFormModal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!isFormValid) {
+    if (isFormValid) {
       setErrors({});
       return dispatch(sessionActions.login({ credential, password }))
         .then(closeModal)
@@ -71,6 +71,7 @@ function LoginFormModal() {
         <h1>Log In</h1>
         <form id="loginForm" onSubmit={handleSubmit}>
           <label>
+            Username or Email
             <input
               id='credential'
               type="text"
@@ -80,6 +81,7 @@ function LoginFormModal() {
             />
           </label>
           <label>
+            Password
             <input
               id="password"
               type="password"
@@ -89,9 +91,11 @@ function LoginFormModal() {
             />
           </label>
           {errors.credential && <p>{errors.credential}</p>}
-          <button type="submit" disabled={!isFormValid} className="login-button">Log In</button>
+          <button type="submit" disabled={!isFormValid} className="login-button-modal">Log In</button>
           <div>
-            <Link to="#" className='demo-user-link' onClick={handleDemoLogin}>Log in as Demo User</Link>
+            <button type="button" className='demo-user-link' onClick={handleDemoLogin}>
+              Log in as Demo User
+            </button>
           </div>
         </form>
       </div>

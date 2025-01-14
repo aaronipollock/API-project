@@ -39,7 +39,7 @@ const LandingPage = () => {
                     ) : (
                         <span className='link disabled'>Start a Group</span>
                     )}
-                    <p>Create your own SyncUp group, and draw from a community of millions</p>
+                    <p>Once you sign up, create your own SyncUp group, and draw from a community of millions</p>
                 </div>
             </section>
             <section className='section section-4'>

@@ -12,49 +12,41 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await User.bulkCreate([
       {
-        firstName: 'John',
-        lastName: 'Smith',
-        email: 'john.smith@gmail.com',
-        username: 'JohnSmith',
-        hashedPassword: bcrypt.hashSync('secret password')
-      },
-      {
         firstName: 'Demo',
-        lastName: 'Lition',
+        lastName: 'User',
         email: 'demo@user.io',
         username: 'Demo-lition',
         hashedPassword: bcrypt.hashSync('password')
       },
       {
-        firstName: 'Fake',
-        lastName: 'One',
-        email: 'user1@user.io',
-        username: 'FakeUser1',
+        firstName: 'Sarah',
+        lastName: 'Chen',
+        email: 'sarah@tech.io',
+        username: 'TechLead',
         hashedPassword: bcrypt.hashSync('password2')
       },
       {
-        firstName: 'Faker',
-        lastName: 'Two',
-        email: 'user2@user.io',
-        username: 'FakeUser2',
+        firstName: 'Alex',
+        lastName: 'Kumar',
+        email: 'alex@dev.io',
+        username: 'FullStackAlex',
         hashedPassword: bcrypt.hashSync('password3')
+      },
+      {
+        firstName: 'Maria',
+        lastName: 'Garcia',
+        email: 'maria@code.io',
+        username: 'CloudArchitect',
+        hashedPassword: bcrypt.hashSync('password4')
       }
     ], { validate: true });
   },
 
-  //   async down(queryInterface, Sequelize) {
-  //     options.tableName = 'Users';
-  //     const Op = Sequelize.Op;
-  //     return queryInterface.bulkDelete(options, {
-  //       username: { [Op.in]: ['JohnSmith', 'Demo-lition', 'FakeUser1', 'FakeUser2'] }
-  //     });
-  //   }
-  // };
   async down(queryInterface, Sequelize) {
     options.tableName = 'Users';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      username: { [Op.in]: ['JohnSmith', 'Demo-lition', 'FakeUser1', 'FakeUser2'] }
+      username: { [Op.in]: ['Demo-lition', 'TechLead', 'FullStackAlex', 'CloudArchitect'] }
     }, {});
   }
 };
