@@ -2,6 +2,9 @@ import './LandingPage.css';
 import { useSelector } from 'react-redux';
 import { FaUsers, FaCalendarAlt, FaPlusCircle } from 'react-icons/fa';
 import meetingImage from '../../images/color.jpg';
+import OpenModalButton from '../OpenModalButton/OpenModalButton';
+import SignupFormModal from '../SignupFormModal';
+
 
 const LandingPage = () => {
     const sessionUser = useSelector((state) => state.session.user);
@@ -43,7 +46,13 @@ const LandingPage = () => {
                 </div>
             </section>
             <section className='section section-4'>
-                <button className='join-button'>Join SyncUp</button>
+            <div>
+              <OpenModalButton
+                className="join-button"
+                buttonText="Join SyncUp"
+                modalComponent={<SignupFormModal />}
+              />
+            </div>
             </section>
         </div>
     )
