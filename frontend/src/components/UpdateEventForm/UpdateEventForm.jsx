@@ -97,7 +97,6 @@ function UpdateEventForm() {
             });
 
             if (response.ok) {
-                const updatedEvent = await response.json();
                 navigate(`/events/${eventId}`);
             } else {
                 const errorData = await response.json();
@@ -114,7 +113,7 @@ function UpdateEventForm() {
     return (
         <div className="update-event-form">
             <h1>Update event for<br />{group?.name}</h1>
-            <p>We'll walk you through a few steps to update your event.</p>
+            <p>We&apos;ll walk you through a few steps to update your event.</p>
 
             <form onSubmit={handleSubmit}>
                 <section className="form-section">
@@ -182,7 +181,7 @@ function UpdateEventForm() {
 
                 <section className="form-section">
                     <h2>Describe your event</h2>
-                    <p>Give people an idea of what they'll be doing.</p>
+                    <p>Give people an idea of what they&apos;ll be doing.</p>
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}

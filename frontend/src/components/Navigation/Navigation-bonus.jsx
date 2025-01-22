@@ -5,14 +5,13 @@ import './Navigation.css';
 import '../Header/header.css';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
-import { useModal } from '../../context/Modal';
 // import * as sessionActions from '../../store/session';
 import UserMenu from '../UserMenu/UserMenu';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 
 function Navigation() {
   const sessionUser = useSelector(state => state.session.user);
-  const { openModal } = useModal();
+  // const { openModal } = useModal();
   // const dispatch = useDispatch()
   // const navigate = useNavigate();
 

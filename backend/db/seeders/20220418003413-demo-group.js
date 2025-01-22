@@ -15,7 +15,7 @@ module.exports = {
         {
           organizerId: 1, // Demo-lition - Our most active community leader
           name: 'Cloud Computing Enthusiasts',
-          about: 'A community of cloud computing professionals and enthusiasts sharing knowledge about AWS, Azure, and Google Cloud. Join us for workshops, certification study groups, and networking events. Monthly hands-on labs and guest speakers from major cloud providers.',
+          about: 'A community for cloud computing professionals sharing knowledge about AWS, Azure, and Google Cloud.',
           type: 'Online',
           private: false,
           city: 'San Francisco',
@@ -24,7 +24,7 @@ module.exports = {
         {
           organizerId: 2, // TechLead - AI/ML expert
           name: 'AI/ML Study Group',
-          about: 'Dive deep into artificial intelligence and machine learning concepts. From neural networks to deep learning, we explore cutting-edge AI technologies through hands-on projects. Weekly coding sessions and paper discussions.',
+          about: 'Dive deep into AI and ML concepts. From neural networks to deep learning, we explore cutting-edge technologies.',
           type: 'In person',
           private: false,
           city: 'Seattle',

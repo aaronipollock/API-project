@@ -55,7 +55,7 @@ const EventListPage = () => {
                 </div>
                 <p className="caption">Events in SyncUp</p>
                 <ul className="event-list">
-                    {events.map((event, index) => (
+                    {events.map((event) => (
                         <li key={event.id} className="event-item" onClick={() => navigate(`/events/${event.id}`)}>
                             <img src={event.previewImage || 'default_image_url_here'} className="event-thumbnail" />
                             <div className="event-info">

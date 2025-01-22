@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { csrfFetch } from '../../store/csrf';
 import './CreateEventForm.css';
 
-function CreateEventForm({ onClose }) {
+function CreateEventForm() {
     const { groupId } = useParams();
     const [group, setGroup] = useState(null);
     const [name, setName] = useState('');
@@ -14,7 +14,7 @@ function CreateEventForm({ onClose }) {
     const [endDate, setEndDate] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [description, setDescription] = useState('');
-    const [capacity, setCapacity] = useState('');
+    const [capacity] = useState(0);
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
@@ -114,12 +114,6 @@ function CreateEventForm({ onClose }) {
             navigate(`/events/${newEvent.id}`);
         } catch (error) {
             alert(error.message);
-        }
-    };
-
-    const handleModalClick = (e) => {
-        if (e.target.classList.contains('modal')) {
-            onClose();
         }
     };
 
