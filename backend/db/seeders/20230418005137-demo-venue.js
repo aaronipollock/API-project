@@ -42,6 +42,54 @@ module.exports = {
         state: 'FL',
         lat: 25.7617,
         lng: -80.1918,
+      },
+      {
+        groupId: 5, // DevOps Practitioners
+        address: '555 Pioneer Square',
+        city: 'Portland',
+        state: 'OR',
+        lat: 45.5155,
+        lng: -122.6789,
+      },
+      {
+        groupId: 6, // UX/UI Design Masters
+        address: '888 Venice Boulevard',
+        city: 'Los Angeles',
+        state: 'CA',
+        lat: 34.0522,
+        lng: -118.2437,
+      },
+      {
+        groupId: 7, // Cybersecurity Alliance
+        address: '777 Beacon Street',
+        city: 'Boston',
+        state: 'MA',
+        lat: 42.3601,
+        lng: -71.0589,
+      },
+      {
+        groupId: 8, // Data Science Hub
+        address: '444 Michigan Avenue',
+        city: 'Chicago',
+        state: 'IL',
+        lat: 41.8781,
+        lng: -87.6298,
+      },
+      {
+        groupId: 9, // Mobile App Creators
+        address: '999 16th Street Mall',
+        city: 'Denver',
+        state: 'CO',
+        lat: 39.7392,
+        lng: -104.9903,
+      },
+      {
+        groupId: 10, // Quantum Computing Explorers
+        address: '222 Broadway',
+        city: 'New York',
+        state: 'NY',
+        lat: 40.7128,
+        lng: -74.0060,
       }
     ], { validate: true });
   },
@@ -50,7 +98,9 @@ module.exports = {
     options.tableName = 'Venues';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      address: { [Op.in]: ['123 Market Street', '456 Pine Street', '789 Congress Avenue', '321 Brickell Avenue'] }
+      address: { [Op.in]: ['123 Market Street', '456 Pine Street', '789 Congress Avenue', '321 Brickell Avenue',
+        '555 Pioneer Square', '888 Venice Boulevard', '777 Beacon Street', '444 Michigan Avenue',
+        '999 16th Street Mall', '222 Broadway'] }
     }, {});
   }
 };
