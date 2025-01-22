@@ -1,47 +1,225 @@
 .event-details-page {
-    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
 }
 
 .breadcrumb {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.breadcrumb a {
     color: teal;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: #004d4d;
 }
 
 .event-header {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.event-header h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.event-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
 }
 
 .event-image {
     width: 100%;
-    max-height: 400px;
+    height: 500px;
     object-fit: cover;
-    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .event-info-box {
-    margin-bottom: 20px;
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.event-info-box .icon {
-    margin-right: 10px;
-}
-
-.event-time, .event-price, .event-location {
+.event-time {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    padding: 15px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.time-details {
+    flex: 1;
+}
+
+.time-section {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 10px;
 }
 
+.time-section:last-child {
+    margin-bottom: 0;
+}
+
+.time-label {
+    font-weight: 600;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.time-value {
+    color: #333;
+}
+
+.event-info-box .icon {
+    font-size: 1.2rem;
+    margin-right: 15px;
+    margin-top: 4px;
+    color: teal;
+}
+
 .event-description-section {
-    margin-top: 20px;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-top: 30px;
+}
+
+.event-description-section h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
 }
 
 .group-info-box {
-    margin-top: 20px;
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 8px;
+    margin-top: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.group-info-box h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.group-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.group-info-box p {
+    margin: 8px 0;
+    color: #666;
+}
+
+.group-info-box p:first-of-type {
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1em;
 }
 
 .host-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.organizer-actions {
+    display: flex;
+    gap: 10px;
     margin-top: 20px;
+}
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Update button - teal color */
+.button:not(.delete-button) {
+    background-color: teal;
+    color: white;
+}
+
+.button:not(.delete-button):hover {
+    background-color: #006666;
+}
+
+/* Delete button - red color */
+.delete-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.delete-confirm-button,
+.delete-cancel-button {
+    width: 220px;
+    padding: 12px 24px;
+    margin: 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.delete-confirm-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px;
+}
+
+.delete-confirm-button:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.delete-cancel-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+}
+
+.delete-cancel-button:hover {
+    background-color: #5a6268;
 }
 
 .modal {
@@ -50,35 +228,91 @@
     left: 0;
     width: 100%;
     height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    backdrop-filter: blur(4px);
 }
 
 .modal-content {
     background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    text-align: center;
+    padding: 40px;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
 }
 
-.button {
-    background-color: darkgray;
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.modal-content p {
+    margin-bottom: 25px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .event-content {
+        grid-template-columns: 1fr;
+    }
+
+    .event-header h1 {
+        font-size: 2rem;
+    }
+
+    .event-image {
+        height: 300px;
+    }
+}
+
+.update-event-button {
+    background-color: teal;
     color: white;
     border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    margin-right: 10px;
 }
 
-.delete-confirm-button {
-    background-color: red;
+.update-event-button:hover {
+    background-color: #006666;
 }
 
-.delete-cancel-button {
-    background-color: darkgray;
+.delete-event-button {
+    background-color: #dc3545;
     color: white;
+    border: none;
+}
+
+.delete-event-button:hover {
+    background-color: #c82333;
+}
+
+.modal-content .delete-confirm-button,
+.delete-confirm-button {
+    width: 220px;
+    padding: 12px 24px;
+    margin: 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px;
+    white-space: nowrap;
+    background-color: #dc3545 !important;  /* Force red color */
+    color: white;
+    border: none;
+}
+
+.modal-content .delete-confirm-button:hover,
+.delete-confirm-button:hover {
+    background-color: #c82333 !important;  /* Force darker red on hover */
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

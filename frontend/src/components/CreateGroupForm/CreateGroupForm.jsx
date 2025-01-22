@@ -35,21 +35,49 @@ function CreateGroupForm() {
 
         const [city, state] = location.split(', ').map(part => part.trim());
 
-        const groupData = { name, about: description, type, private: privacy === 'private', city, state, imageUrl };
+        try {
+            // First create the group
+            const groupResponse = await csrfFetch('/api/groups', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    about: description,
+                    type,
+                    private: privacy === 'private',
+                    city,
+                    state
+                })
+            });
 
-        const response = await csrfFetch('/api/groups', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(groupData)
-        });
+            if (!groupResponse.ok) {
+                throw new Error('Failed to create group');
+            }
 
-        if (response.ok) {
-            const newGroup = await response.json();
-            navigate(`/groups/${newGroup.id}`)
-        } else {
-            alert('Failed to create group');
+            const newGroup = await groupResponse.json();
+
+            // Then add the image to the group
+            const imageResponse = await csrfFetch(`/api/groups/${newGroup.id}/images`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    url: imageUrl,
+                    preview: true
+                })
+            });
+
+            if (!imageResponse.ok) {
+                throw new Error('Failed to add image');
+            }
+
+            // Navigate to the new group page
+            navigate(`/groups/${newGroup.id}`);
+        } catch (error) {
+            alert(error.message);
         }
     };
 
@@ -69,7 +97,7 @@ function CreateGroupForm() {
         <div className="create-group-form">
             <title>Start a new group</title>
             <h1>Start a new group</h1>
-            <p>We&apos;ll walk you through a few steps to build your local community</p>
+            <p>We&apos;ll walk you through a few steps to build your local community.</p>
             <form onSubmit={handleSubmit}>
                 <section className="form-section">
                     <h2>Set your group&apos;s location.</h2>

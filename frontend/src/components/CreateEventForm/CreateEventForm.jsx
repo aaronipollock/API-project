@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { csrfFetch } from '../../store/csrf';
 import './CreateEventForm.css';
 
-function CreateEventForm() {
+function CreateEventForm({ onClose }) {
     const { groupId } = useParams();
     const [group, setGroup] = useState(null);
     const [name, setName] = useState('');
@@ -14,6 +14,7 @@ function CreateEventForm() {
     const [endDate, setEndDate] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [description, setDescription] = useState('');
+    const [capacity, setCapacity] = useState('');
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
@@ -68,90 +69,159 @@ function CreateEventForm() {
             return;
         }
 
-        const eventData = { name, type, privacy, price, startDate, endDate, imageUrl, description };
-        // console.log('Event Data:', eventData);
-
         try {
-            const eventRes = await csrfFetch(`/api/groups/${groupId}/events`, {
+            // First create the event
+            const eventResponse = await csrfFetch(`/api/groups/${groupId}/events`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(eventData)
+                body: JSON.stringify({
+                    venueId: null,
+                    name,
+                    type,
+                    capacity: parseInt(capacity),
+                    price: parseFloat(price),
+                    description,
+                    startDate,
+                    endDate
+                })
             });
 
-            if (eventRes.ok) {
-                const newEvent = await eventRes.json();
-                // console.log('New Event:', newEvent);
-                navigate(`/events/${newEvent.id}`);
+            if (!eventResponse.ok) {
+                throw new Error('Failed to create event');
             }
-            // else {
-            //     const errorData = await eventRes.json();
-            //     // console.error('Error:', errorData);
-            //     alert('Failed to create event');
-            // }
-        } catch (err) {
-            console.error('Request Error:', err);
+
+            const newEvent = await eventResponse.json();
+
+            // Then add the image to the event
+            const imageResponse = await csrfFetch(`/api/events/${newEvent.id}/images`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    url: imageUrl,
+                    preview: true
+                })
+            });
+
+            if (!imageResponse.ok) {
+                throw new Error('Failed to add image');
+            }
+
+            // Navigate to the new event page
+            navigate(`/events/${newEvent.id}`);
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+
+    const handleModalClick = (e) => {
+        if (e.target.classList.contains('modal')) {
+            onClose();
         }
     };
 
     if (!group) {
-        return <p>Loading group details...</p>
+        return <div className="modal-loading">Loading...</div>;
     }
 
     return (
         <div className="create-event-form">
-            <h1>Create a new event for {group.name}</h1>
+            <h1>Create a new event for<br />{group?.name}</h1>
+            <p>We&apos;ll walk you through a few steps to create your event.</p>
+
             <form onSubmit={handleSubmit}>
                 <section className="form-section">
-                    <label htmlFor="name">What is the name of your event?</label>
-                    <input type="text" id="name" placeholder="Event Name" value={name} onChange={(e) => setName(e.target.value)} />
-                    {errors.name && <p className="error-message">{errors.name}</p>}
+                    <h2>What is the name of your event?</h2>
+                    <p>Choose a name that will give people a clear idea of what the event is about.</p>
+                    <input
+                        type="text"
+                        placeholder="Event Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
+                    {errors.name && <span className="error">{errors.name}</span>}
                 </section>
-                <section className='form-section'>
-                    <label htmlFor="type">Is this an in-person or online event?</label>
-                    <select id="type" value={type} onChange={(e) => setType(e.target.value)}>
+
+                <section className="form-section">
+                    <h2>Event Details</h2>
+                    <p>Help people know what to expect.</p>
+
+                    <label>Is this an in-person or online event?</label>
+                    <select value={type} onChange={(e) => setType(e.target.value)}>
                         <option value="">Select one</option>
                         <option value="Online">Online</option>
                         <option value="In person">In person</option>
                     </select>
-                    {errors.type && <p className="error-message">{errors.type}</p>}
-                </section>
-                <section className="form-section">
-                    <label htmlFor="privacy">Visibility</label>
-                    <select id="privacy" value={privacy} onChange={(e) => setPrivacy(e.target.value)}>
+                    {errors.type && <span className="error">{errors.type}</span>}
+
+                    <label>Is this event private or public?</label>
+                    <select value={privacy} onChange={(e) => setPrivacy(e.target.value)}>
                         <option value="">Select one</option>
                         <option value="Private">Private</option>
                         <option value="Public">Public</option>
                     </select>
-                    {errors.privacy && <p className="error-message">{errors.privacy}</p>}
+                    {errors.privacy && <span className="error">{errors.privacy}</span>}
+
+                    <label>What is the price for your event?</label>
+                    <input
+                        type="number"
+                        placeholder="0"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                    />
+                    {errors.price && <span className="error">{errors.price}</span>}
                 </section>
+
                 <section className="form-section">
-                    <label htmlFor="price">What is the price for you event?</label>
-                    <input type="number" id="price" placeholder="0" value={price} onChange={(e) => setPrice(e.target.value)} />
-                    {errors.price && <p className="error-message">{errors.price}</p>}
+                    <h2>When is your event?</h2>
+                    <p>Let people know when to show up.</p>
+
+                    <label>Start Date and Time</label>
+                    <input
+                        type="datetime-local"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                    />
+                    {errors.startDate && <span className="error">{errors.startDate}</span>}
+
+                    <label>End Date and Time</label>
+                    <input
+                        type="datetime-local"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                    />
+                    {errors.endDate && <span className="error">{errors.endDate}</span>}
                 </section>
-                <section className='form-section'>
-                    <label htmlFor="startDate">When does your event start?</label>
-                    <input type="datetime-local" id="startDate" placeholder="MM/DD/YYYY, HH:mm AM" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-                    {errors.startDate && <p className="error-message">{errors.startDate}</p>}
+
+                <section className="form-section">
+                    <h2>Describe your event</h2>
+                    <p>Give people an idea of what they&apos;ll be doing.</p>
+                    <textarea
+                        placeholder="Please include at least 30 characters."
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                    {errors.description && <span className="error">{errors.description}</span>}
                 </section>
-                <section className='form-section'>
-                    <label htmlFor="endDate">When does your event end?</label>
-                    <input type="datetime-local" id="endDate" placeholder="MM/DD/YYYY, HH:mm PM" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                    {errors.endDate && <p className="error-message">{errors.endDate}</p>}
+
+                <section className="form-section">
+                    <h2>Add an image</h2>
+                    <p>Help people visualize your event.</p>
+                    <input
+                        type="text"
+                        placeholder="Image URL"
+                        value={imageUrl}
+                        onChange={(e) => setImageUrl(e.target.value)}
+                    />
+                    {errors.imageUrl && <span className="error">{errors.imageUrl}</span>}
                 </section>
-                <section className='form-section'>
-                    <label htmlFor="imageUrl">Please add an image URL for your event below:</label>
-                    <input type="text" id="imageUrl" placeholder="Image URL" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
-                    {errors.imageUrl && <p className="error-message">{errors.imageUrl}</p>}
-                </section>
-                <section className='form-section'>
-                    <label htmlFor="description">Please describe your event</label>
-                    <textarea id="description" placeholder='Please include at least 30 characters.' value={description} onChange={(e) => setDescription(e.target.value)} />
-                    {errors.description && <p className="error-message">{errors.description}</p>}
-                </section>
-                <button type="submit" className='create-event-button'>Create Event</button>
+
+                <button type="submit" className="submit-button">
+                    Create Event
+                </button>
             </form>
         </div>
     );

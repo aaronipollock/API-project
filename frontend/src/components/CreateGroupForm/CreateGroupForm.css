@@ -41,20 +41,33 @@ textarea {
 .create-group-button {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #d9534f;
+    background-color: teal;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    float: right;
+    margin-top: 20px;
 }
 
 .create-group-button:hover {
-    background-color: #c9302c;
+    background-color: #006666;
+}
+
+.create-group-form .create-group-button:hover {
+    background-color: #006666;
 }
 
 .error-message {
     color: red;
     font-size: 0.875em;
     margin-top: 0.25em;
+}
+
+/* Add a clearfix to the form to handle the float */
+form::after {
+    content: "";
+    display: table;
+    clear: both;
 }

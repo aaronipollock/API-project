@@ -88,7 +88,7 @@ function UpdateGroupForm() {
     return (
         <div className="create-group-form">
             <h1>Update your Group</h1>
-            <p>We&apos;ll walk you through a few steps to build your local community</p>
+            <p>We&apos;ll walk you through a few steps to build your local community.</p>
             <form onSubmit={handleSubmit}>
                 <section className="form-section">
                     <h2>Set your group&apos;s location.</h2>

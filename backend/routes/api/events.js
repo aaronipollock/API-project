@@ -3,7 +3,7 @@ const { Op, UUID } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-const { Event, Venue, Membership, Group, User, Attendance, EventImage } = require('../../db/models');
+const { Event, Venue, Membership, Group, User, Attendance, EventImage, GroupImage } = require('../../db/models');
 const attendance = require('../../db/models/attendance');
 
 const router = express.Router();
@@ -97,54 +97,88 @@ router.get('/', async (req, res, next) => {
 
 // Get details of an Event specified by its id
 router.get('/:eventId', async (req, res, next) => {
-    const { eventId } = req.params;
+    try {
+        const { eventId } = req.params;
+        console.log('Fetching event:', eventId);
 
-    const event = await Event.findByPk(eventId, {
-        include: [
-            { model: Group, attributes: ['id', 'name', 'private', 'city', 'state'] },
-            { model: Venue, attributes: ['id', 'address', 'city', 'state', 'lat', 'lng'] },
-            { model: EventImage, attributes: ['id', 'url', 'preview'] }
-        ],
-    })
+        const event = await Event.findByPk(eventId, {
+            include: [
+                {
+                    model: Group,
+                    attributes: ['id', 'name', 'private', 'city', 'state', 'about', 'organizerId'],
+                    include: [
+                        {
+                            model: GroupImage,
+                            attributes: ['url', 'preview'],
+                            required: false
+                        },
+                        {
+                            model: User,
+                            as: 'Organizer',
+                            attributes: ['id', 'firstName', 'lastName']
+                        }
+                    ]
+                },
+                { model: Venue, attributes: ['id', 'address', 'city', 'state', 'lat', 'lng'] },
+                { model: EventImage, attributes: ['id', 'url', 'preview'] }
+            ]
+        });
 
-    if (!event) {
-        return res.status(404).json({
-            errors: {
+        if (!event) {
+            return res.status(404).json({
                 message: "Event couldn't be found"
-            }
-        })
-    }
-
-    const attendances = await Attendance.findAll({
-        attributes: ['eventId', 'status']
-    })
-
-    let numAttending = 0;
-
-    attendances.forEach((attendance) => {
-        if (attendance.eventId === event.id && attendance.status === 'attending') {
-            numAttending++;
+            });
         }
-    });
 
-    const updatedEvent = {
-        id: event.id,
-        groupId: event.groupId,
-        venueId: event.venueId,
-        name: event.name,
-        description: event.description,
-        type: event.type,
-        capacity: event.capacity,
-        price: event.price,
-        startDate: event.startDate,
-        endDate: event.endDate,
-        numAttending,
-        Group: event.Group,
-        Venue: event.Venue,
-        EventImages: event.EventImages
+        const attendances = await Attendance.findAll({
+            attributes: ['eventId', 'status']
+        });
+
+        let numAttending = 0;
+
+        attendances.forEach((attendance) => {
+            if (attendance.eventId === event.id && attendance.status === 'attending') {
+                numAttending++;
+            }
+        });
+
+        // Find the preview images
+        const previewImage = event.EventImages.find(img => img.preview)?.url || null;
+        const groupPreviewImage = event.Group.GroupImages?.[0]?.url || null;
+
+        console.log('Event organizerId:', event.Group.organizerId);
+        console.log('Full event data:', JSON.stringify(event, null, 2));
+
+        const updatedEvent = {
+            id: event.id,
+            groupId: event.groupId,
+            venueId: event.venueId,
+            name: event.name,
+            description: event.description,
+            type: event.type,
+            capacity: event.capacity,
+            price: event.price,
+            startDate: event.startDate,
+            endDate: event.endDate,
+            numAttending,
+            previewImage,
+            Group: {
+                ...event.Group.toJSON(),
+                previewImage: groupPreviewImage,
+                organizerId: event.Group.organizerId
+            },
+            Venue: event.Venue,
+            EventImages: event.EventImages
+        };
+
+        return res.json(updatedEvent);
+    } catch (error) {
+        console.error('Server error:', error);
+        return res.status(500).json({
+            message: "Server error occurred",
+            error: error.message
+        });
     }
-
-    return res.json(updatedEvent)
 });
 
 // Add an Image to an Event based on the Event's id
@@ -205,7 +239,7 @@ router.post('/:eventId/images', requireAuth, async (req, res, next) => {
 })
 
 //Edit an Event specified by its id
-router.put('/:eventId', requireAuth, async (req, res, next) => {
+router.put('/:eventId/update', requireAuth, async (req, res, next) => {
     const { eventId } = req.params;
     const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
 

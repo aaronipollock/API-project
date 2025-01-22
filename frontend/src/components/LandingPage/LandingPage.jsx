@@ -14,7 +14,7 @@ const LandingPage = () => {
             <section className="section section-1">
                 <div className="text">
                     <h1>The tech hub where innovation sparks connection</h1>
-                    <p>Whatever your tech passion—be it coding, AI, blockchain, or cloud computing—there’s a thriving community waiting for you on SyncUp. Events and workshops happen daily—sign up to build, learn, and innovate with like-minded tech enthusiasts.</p>
+                    <p>Whatever your tech passion—be it coding, AI, blockchain, or cloud computing—there&apos;s a thriving community waiting for you on SyncUp. Events and workshops happen daily—sign up to build, learn, and innovate with like-minded tech enthusiasts.</p>
                 </div>
                 <div className="infographic">
                     <img src={meetingImage} alt="Team collaborating around a wooden table with laptops" />
@@ -33,7 +33,7 @@ const LandingPage = () => {
                 <div className='column'>
                     <FaCalendarAlt className='icon' />
                     <a href="/events" className='link'>Find an event</a>
-                    <p>See who's hosting local events for all the things you love</p>
+                    <p>See who&apos;s hosting local events for all the things you love</p>
                 </div>
                 <div className='column'>
                     <FaPlusCircle className='icon' />
@@ -46,13 +46,15 @@ const LandingPage = () => {
                 </div>
             </section>
             <section className='section section-4'>
-            <div>
-              <OpenModalButton
-                className="join-button"
-                buttonText="Join SyncUp"
-                modalComponent={<SignupFormModal />}
-              />
-            </div>
+                {!sessionUser && (
+                    <div>
+                        <OpenModalButton
+                            className="join-button"
+                            buttonText="Join SyncUp"
+                            modalComponent={<SignupFormModal />}
+                        />
+                    </div>
+                )}
             </section>
         </div>
     )

@@ -1,13 +1,30 @@
- <!DOCTYPE html>
- <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>SyncUp</title>
-        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    </head>
-    <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div id="root"></div>
-    </body>
- </html>
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>SyncUp</title>
+
+       <!-- Force SVG favicon with timestamp to prevent caching -->
+       <link
+           rel="icon"
+           type="image/svg+xml"
+           href="/favicon.svg?v=1"
+       >
+   </head>
+   <body>
+       <noscript>You need to enable JavaScript to run this app.</noscript>
+       <div id="root"></div>
+
+       <!-- Force favicon reload -->
+       <script>
+           document.addEventListener('DOMContentLoaded', function() {
+               const faviconLink = document.querySelector('link[rel="icon"]');
+               if (faviconLink) {
+                   // Force a reload of the favicon
+                   faviconLink.href = '/favicon.svg?v=' + Date.now();
+               }
+           });
+       </script>
+   </body>
+</html>

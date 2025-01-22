@@ -9,13 +9,20 @@ const router = express.Router();
 
 //Get all Groups
 router.get('/', async (req, res, next) => {
-    const Groups = await Group.findAll();
+    const Groups = await Group.findAll({
+        include: [
+            {
+                model: GroupImage,
+                attributes: ['url', 'preview'],
+                where: { preview: true },
+                required: false
+            }
+        ]
+    });
 
     const memberships = await Membership.findAll({
         attributes: ['groupId', 'status']
     });
-
-    const previewImages = await GroupImage.findAll();
 
     const updatedGroups = Groups.map((group) => {
         let numMem = 1;
@@ -26,21 +33,18 @@ router.get('/', async (req, res, next) => {
             }
         });
 
-        let previewImg = null;
-
-        previewImages.forEach((previewImage) => {
-            if (previewImage.groupId === group.id && previewImage.preview === true) {
-                previewImg = previewImage.url;
-                return;
-            }
-        });
-
+        const groupJSON = group.toJSON();
         return {
-            ...group.toJSON(),
+            ...groupJSON,
             numMembers: numMem,
-            previewImage: previewImg,
-        }
+            previewImage: groupJSON.GroupImages && groupJSON.GroupImages.length > 0
+                ? groupJSON.GroupImages[0].url
+                : null
+        };
     });
+
+    // Log the first group to verify the structure
+    console.log("First group after processing:", updatedGroups[0]);
 
     return res.json({
         Groups: updatedGroups

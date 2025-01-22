@@ -5,7 +5,6 @@ import './EventListPage.css';
 const EventListPage = () => {
     const navigate = useNavigate();
     const [events, setEvents] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -30,22 +29,16 @@ const EventListPage = () => {
                     }));
 
                     setEvents(eventsWithDescriptions);
-                    setLoading(false);
                 } else {
                     throw new Error('Failed to fetch events');
                 }
             } catch (err) {
                 setError(err.toString());
-                setLoading(false);
             }
         };
 
         fetchEvents();
     }, []);
-
-    if (loading) {
-        return <p>Loading...</p>;
-    }
 
     if (error) {
         return <p>{error}</p>
@@ -60,7 +53,7 @@ const EventListPage = () => {
                         <h2 className="gray-header">Groups</h2>
                     </Link>
                 </div>
-                <p className="caption">Events in Meetup</p>
+                <p className="caption">Events in SyncUp</p>
                 <ul className="event-list">
                     {events.map((event, index) => (
                         <li key={event.id} className="event-item" onClick={() => navigate(`/events/${event.id}`)}>

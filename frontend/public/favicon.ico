@@ -1,8 +1,0 @@
-import Favicon from "react-favicon";
-import { HiOutlineLink } from "react-icons/hi";
-
-Const Icon = () => {
-    return <HiOutlineLink />
-}
-
-export default Icon;

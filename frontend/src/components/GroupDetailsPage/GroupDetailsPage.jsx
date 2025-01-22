@@ -126,7 +126,15 @@ function GroupDetailsPage() {
                 <Link to="/groups">&lt; Groups</Link>
             </nav>
             <div className="group-details">
-                <img src={group.image || 'default_image_url_here'} className="group-image" />
+                <img
+                    src={group?.GroupImages?.find(img => img.preview)?.url || 'https://placehold.co/600x400?text=No+Image'}
+                    className="group-image"
+                    alt={group?.name || 'Group'}
+                    onError={(e) => {
+                        console.log('Failed to load image:', group?.GroupImages?.find(img => img.preview)?.url);
+                        e.target.src = 'https://placehold.co/600x400?text=No+Image';
+                    }}
+                />
                 <div className="group-info">
                     <div>
                         <h1 className="group-name">{group.name}</h1>
@@ -144,7 +152,7 @@ function GroupDetailsPage() {
                         )}
                         {currentUser && isOrganizer && (
                             <div className="organizer-actions">
-                                <button className="button" onClick={handleCreateEvent}>Create event</button>
+                                <button className="button" onClick={handleCreateEvent}>Create Event</button>
                                 <button className="button" onClick={handleUpdateGroup}>Update</button>
                                 <button className="button delete-button" onClick={() => setShowDeleteModal(true)}>Delete</button>
                             </div>

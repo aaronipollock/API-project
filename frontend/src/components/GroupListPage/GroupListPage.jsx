@@ -24,6 +24,9 @@ const GroupListPage = () => {
                 const groupData = await groupRes.json();
                 const eventData = await eventRes.json();
 
+                console.log('Raw group data:', groupData);
+                console.log('First group:', groupData.Groups[0]);
+
                 dispatch(setGroups(groupData.Groups));
                 dispatch(setEvents(eventData.Events));
                 setLoading(false);
@@ -49,21 +52,32 @@ const GroupListPage = () => {
     } else {
         content = (
             <ul className="group-list">
-                {groups.map((group) => (
-                    <li key={group.id} className="group-item" onClick={() => window.location.href = `/groups/${group.id}`}>
-                        <img src={group.image || 'default_image_url_here'} className="group-image" />
-                        <div className="group-info">
-                            <h2 className="group-name">{group.name}</h2>
-                            <p className="group-location">{`${group.city}, ${group.state}`}</p>
-                            <p className="group-description">{group.about}</p>
-                            <div className="group-meta">
-                                <span className="group-events">{numEvents(group.id)} events</span>
-                                <span className="dot">·</span>
-                                <span className="group-privacy">{group.private ? 'Private' : 'Public'}</span>
+                {groups.map((group) => {
+                    console.log('Rendering group:', group);
+                    return (
+                        <li key={group.id} className="group-item" onClick={() => window.location.href = `/groups/${group.id}`}>
+                            <img
+                                src={group.previewImage || 'https://placehold.co/600x400?text=No+Image'}
+                                className="group-image"
+                                alt={group.name}
+                                onError={(e) => {
+                                    console.log('Image failed to load:', group.previewImage);
+                                    e.target.src = 'https://placehold.co/600x400?text=No+Image';
+                                }}
+                            />
+                            <div className="group-info">
+                                <h2 className="group-name">{group.name}</h2>
+                                <p className="group-location">{`${group.city}, ${group.state}`}</p>
+                                <p className="group-description">{group.about}</p>
+                                <div className="group-meta">
+                                    <span className="group-events">{numEvents(group.id)} events</span>
+                                    <span className="dot">·</span>
+                                    <span className="group-privacy">{group.private ? 'Private' : 'Public'}</span>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                ))}
+                        </li>
+                    );
+                })}
             </ul>
         );
     }

@@ -57,7 +57,6 @@ module.exports = {
           endDate: '2025-11-24 17:00:00'
         }
       ], { validate: true });
-      console.log('Events seeded successfully!');
     } catch (error) {
       console.error('Error seeding events:', error);
     }
