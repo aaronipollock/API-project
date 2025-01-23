@@ -14,9 +14,9 @@ module.exports = {
     typeValidation: true
   },
   production: {
-    url: process.env.DATABASE_URL,
-    dialect: "postgres",
-    seederStorage: "sequelize",
+    use_env_variable: 'DATABASE_URL',
+    dialect: 'postgres',
+    seederStorage: 'sequelize',
     dialectOptions: {
       ssl: {
         require: true,
@@ -25,7 +25,6 @@ module.exports = {
     },
     define: {
       schema: process.env.SCHEMA
-    },
-    logging: console.log
+    }
   }
 };
