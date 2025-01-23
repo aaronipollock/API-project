@@ -1,5 +1,9 @@
 // backend/config/database.js
 const config = require('./index');
+require('dotenv').config();
+
+console.log('DATABASE_URL:', process.env.DATABASE_URL);
+console.log('SCHEMA:', process.env.SCHEMA);
 
 module.exports = {
   development: {
@@ -10,9 +14,9 @@ module.exports = {
     typeValidation: true
   },
   production: {
-    use_env_variable: 'DATABASE_URL',
-    dialect: 'postgres',
-    seederStorage: 'sequelize',
+    url: process.env.DATABASE_URL,
+    dialect: "postgres",
+    seederStorage: "sequelize",
     dialectOptions: {
       ssl: {
         require: true,
@@ -21,6 +25,7 @@ module.exports = {
     },
     define: {
       schema: process.env.SCHEMA
-    }
+    },
+    logging: console.log
   }
 };
